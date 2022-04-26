@@ -1,0 +1,12 @@
+# 忽略目录
+node_modules
+ 
+# 忽略指定文件
+.eslintrc
+.gitignore
+.prettierrc.js
+vue.config.js
+babel.config.js
+*.map
+package-lock.json
+yarn.lock
