@@ -1,6 +1,6 @@
 {
   "name": "vue-huge-tree",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "private": false,
   "author": "Shen Xianhui",
 	"license": "ISC",
@@ -48,5 +48,10 @@
       "vue-cli-service lint",
       "git add"
     ]
-  }
+  },
+	"eslintConfig": {
+		"rules": {
+			"no-console":"off"
+		}
+	}
 }
