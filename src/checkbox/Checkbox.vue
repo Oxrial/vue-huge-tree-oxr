@@ -3,7 +3,7 @@
  * @Author: shenxh
  * @Date: 2022-04-27 10:18:47
  * @LastEditors: shenxh
- * @LastEditTime: 2022-04-27 20:12:56
+ * @LastEditTime: 2022-04-27 20:29:29
 -->
 
 <template>
@@ -115,7 +115,7 @@ export default {
     &::after {
       content: '\2713';
       position: absolute;
-      left: 3px;
+      left: 2px;
       top: -2px;
       font-size: 12px;
       transform: scale(0);
@@ -123,7 +123,7 @@ export default {
     // 子元素部分选中
     &.is-part-checked::after {
       content: '\2013';
-      left: 4px;
+      left: 3px;
       top: -2px;
     }
     &.is-checked,

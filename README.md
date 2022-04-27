@@ -180,7 +180,7 @@ export default {
 |search-bar| 自定义搜索框的内容, 例:  `<template v-slot:search-bar>xxx</template>`|
 |loading| 自定义加载中 slot, 例:  `<template v-slot:loading>加载中...</template>`|
 
-#### <a id="data-format">数据结构</a>
+### <a id="data-format">数据结构</a>
 
 |属性|说明|类型|可选值|默认值|
 |-|-|-|-|-|
@@ -190,7 +190,7 @@ export default {
 |disabled|设置禁用状态|boolean|true|false|
 |children|节点子元素|array|—|—|
 
-#### <a id="node-format">节点结构</a>
+### <a id="node-format">节点结构</a>
 
 |属性|说明|类型|
 |-|-|-|
@@ -202,7 +202,7 @@ export default {
 |checked|勾选状态|boolean|
 |indeterminate|节点的子树中是否是部分选中|boolean|
 |isLeaf|是否为叶子节点|boolean|
-|path|节点位置|string[]|
+|path|节点位置|array|
 |isExpand|是否展开|boolean|
 |hidden|是否隐藏|boolean|
 |leafCount|后代元素数量|number|
