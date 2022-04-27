@@ -1,8 +1,8 @@
-import Tree from './huge-tree';
+import HugeTree from './huge-tree';
 
 /* istanbul ignore next */
-Tree.install = function(Vue) {
-  Vue.component(Tree.name, Tree);
+HugeTree.install = function(Vue) {
+  Vue.component(HugeTree.name, HugeTree);
 };
 
-export default Tree;
+export default HugeTree;

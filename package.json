@@ -3,15 +3,15 @@
   "version": "0.1.1",
   "private": false,
   "author": "Shen Xianhui",
-	"license": "ISC",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/shenxianhui/vue-huge-tree"
-	},
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shenxianhui/vue-huge-tree"
+  },
   "main": "dist/vue-huge-tree.umd.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build:lib": "vue-cli-service build --target lib --name vue-huge-tree src/index.js",
+    "build": "vue-cli-service build --target lib --name vue-huge-tree src/index.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -49,9 +49,9 @@
       "git add"
     ]
   },
-	"eslintConfig": {
-		"rules": {
-			"no-console":"off"
-		}
-	}
+  "eslintConfig": {
+    "rules": {
+      "no-console": "off"
+    }
+  }
 }

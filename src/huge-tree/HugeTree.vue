@@ -1,3 +1,10 @@
+<!--
+ * @Description: HugeTree
+ * @Author: shenxh
+ * @Date: 2022-04-27 10:18:47
+ * @LastEditors: shenxh
+ * @LastEditTime: 2022-04-27 10:27:52
+-->
 <template>
   <div class="huge-tree">
     <section class="search-bar" v-if="hasInput">
@@ -66,8 +73,7 @@
   </div>
 </template>
 <script>
-import Checkbox from './checkbox.vue';
-// import { throttle, debounce, clearAll } from '../../utils/index.js'
+import Checkbox from '../checkbox';
 import {
   isIncludesKeyword,
   getLeafCount,
@@ -81,7 +87,7 @@ import {
   throttle,
   debounce,
   clearAll
-} from './util.js';
+} from '../utils/util.js';
 
 class BigData {
   _data = []; // 海量数据 tree

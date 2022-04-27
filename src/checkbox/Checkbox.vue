@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import { depthFirstEach } from './util.js';
+import { depthFirstEach } from '../utils/util';
+
 export default {
   model: {
     prop: 'checked',
