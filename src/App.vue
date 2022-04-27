@@ -1,15 +1,17 @@
 <template>
   <div id="app">
-    <huge-tree
-      ref="huge-tree"
-      show-checkbox
-      show-search-bar
-      show-node-count
-      :default-checked-keys="checkedKeys"
-      @check="onClickCheckbox"
-      @click-label="onClickLabel"
-      @check-change="onChange"
-    ></huge-tree>
+    <div class="huge-tree-wrap">
+      <huge-tree
+        ref="huge-tree"
+        show-checkbox
+        show-search-bar
+        show-node-count
+        :default-checked-keys="checkedKeys"
+        @check="onClickCheckbox"
+        @click-label="onClickLabel"
+        @check-change="onChange"
+      ></huge-tree>
+    </div>
   </div>
 </template>
 
@@ -108,8 +110,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
-#app {
-  width: 100vw;
-  height: 100vh;
+.huge-tree-wrap {
+  width: 200px;
+  height: 500px;
+  border: 1px solid #efefef;
 }
 </style>

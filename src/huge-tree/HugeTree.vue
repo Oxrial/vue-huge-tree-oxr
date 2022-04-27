@@ -3,7 +3,7 @@
  * @Author: shenxh
  * @Date: 2022-04-27 10:18:47
  * @LastEditors: shenxh
- * @LastEditTime: 2022-04-27 16:26:26
+ * @LastEditTime: 2022-04-27 17:05:35
 -->
 <template>
   <div class="huge-tree">
@@ -543,15 +543,13 @@ export default {
 </script>
 <style lang="scss">
 .huge-tree {
-  border: 1px solid #000;
-  padding: 10px 0;
-  min-height: 50px;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 50px;
+  height: 100%;
   .search-bar {
-    padding: 0 10px 10px 10px;
     display: flex;
+    margin-bottom: 5px;
     .input {
       flex: 1;
       position: relative;
@@ -605,7 +603,6 @@ export default {
   .content-wrap {
     position: relative;
     overflow: auto;
-    padding: 0 10px;
     flex: 1;
     .tree-phantom {
       position: absolute;
