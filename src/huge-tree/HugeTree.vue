@@ -3,12 +3,12 @@
  * @Author: shenxh
  * @Date: 2022-04-27 10:18:47
  * @LastEditors: shenxh
- * @LastEditTime: 2022-04-27 10:27:52
+ * @LastEditTime: 2022-04-27 16:26:26
 -->
 <template>
   <div class="huge-tree">
-    <section class="search-bar" v-if="hasInput">
-      <slot name="pre-input"></slot>
+    <section class="search-bar" v-if="showSearchBar">
+      <slot name="search-bar"></slot>
       <div class="input">
         <input
           type="text"
@@ -36,7 +36,13 @@
           <section
             v-if="item.path"
             :key="'k' + index"
-            :class="['item', { 'is-hidden': item.isHidden }]"
+            :class="[
+              'item',
+              {
+                'is-hidden': item.isHidden,
+                active: highlightCurrent && item[nodeKey] === selectedNode[nodeKey]
+              }
+            ]"
             :style="`margin-left: ${(item.path.length - 1) * Number(indent)}px`"
           >
             <div
@@ -44,30 +50,32 @@
               :class="[item.isLeaf ? 'leaf-node' : 'expand-node', { 'is-expand': item.isExpand }]"
               @click="onExpand(item, index)"
             ></div>
-            <dt-checkbox
+            <xx-checkbox
               v-model="item.checked"
               :indeterminate="item.indeterminate"
               :disabled="item.disabled"
-              :isLeaf="item.isLeaf"
-              :showCheckboxLeafOnly="showCheckboxLeafOnly"
-              :checkedAction="checkedAction"
-              :showCheckbox="showCheckbox"
-              :checkStriclty="checkStriclty"
+              :is-leaf="item.isLeaf"
+              :show-checkbox-leaf-only="showCheckboxLeafOnly"
+              :checked-action="checkedAction"
+              :show-checkbox="showCheckbox"
+              :check-striclty="checkStrictly"
               :node="item"
-              @on-checked="onChecked(item, index)"
-              @on-click-label="$emit('onClickLabel', item)"
+              @on-checked="onChecked(item)"
+              @on-click-label="onClickLabel(item)"
             >
               <div class="label">
                 <slot :slot-scope="item">{{ item.label }}</slot>
-                <i v-if="!item.isLeaf" class="count">&nbsp;({{ item.leafCount }})</i>
+                <i v-if="!item.isLeaf && showNodeCount" class="count"> ({{ item.leafCount }}) </i>
               </div>
-            </dt-checkbox>
+            </xx-checkbox>
           </section>
         </template>
       </div>
     </section>
     <section v-if="renderList.length <= 0" class="no-data">
-      <p v-if="isLoading || isSearching"><slot name="loading">loading...</slot></p>
+      <p v-if="loading || isSearching">
+        <slot name="loading">{{ loadingText }}</slot>
+      </p>
       <p v-else>{{ emptyText }}</p>
     </section>
   </div>
@@ -104,33 +112,41 @@ class BigData {
 export default {
   name: 'huge-tree',
   components: {
-    'dt-checkbox': Checkbox
+    'xx-checkbox': Checkbox
   },
   props: {
-    // 含有过滤输入框
-    hasInput: { type: Boolean, default: false },
+    // 每个树节点用来作为唯一标识的属性，整棵树应该是唯一的
+    nodeKey: { type: String, default: 'id' },
+    // 是否高亮当前选中节
+    highlightCurrent: { type: Boolean, default: false },
+    // 展开层级 -1: 展开全部; 1: 只展示第一层(最外层); 2: 展示到第二层; ...
+    expandLevel: { type: Number, default: -1 },
+    // 显示节点对应的数据量
+    showNodeCount: { type: Boolean, default: false },
+    // 显示搜索框
+    showSearchBar: { type: Boolean, default: false },
     // 缩进
-    indent: { type: [String, Number], default: 15 },
-    // 指定ids展开
-    expandKeys: { type: Array, default: () => [] },
-    // 展开 level， all: 展开全部； 1: 只展示第一层(最外层)；2: 展示到第二层；、、、
-    expandLevel: { type: [String, Number], default: 'all' },
+    indent: { type: Number, default: 16 },
+    // 默认展开的节点的 key 的数组
+    defaultExpandedKeys: { type: Array, default: () => [] },
     // 输入框 placeholder
-    placeholder: { type: String, default: '请输入关键字进行查找,支持逗号分隔多匹配' },
-    // isLoading
-    isLoading: { type: Boolean, default: false },
-    // 在 label 上选中动作， 点击label选中 --> none: 不选中；click: 单击； dblclick: 双击；
+    placeholder: { type: String, default: '请输入关键字, 多个关键字之间用英文逗号分隔' },
+    // 加载中
+    loading: { type: Boolean, default: false },
+    // 加载状态提示文字
+    loadingText: { type: String, default: 'loading...' },
+    // 在 label 上选中动作, 点击 label 选中 --> none: 不选中；click: 单击； dblclick: 双击；
     checkedAction: { type: String, default: 'none' },
     // 内容为空展示的文本
     emptyText: { type: String, default: '暂无数据' },
     // 是否展示checkbox
     showCheckbox: { type: Boolean, default: false },
-    // showCheckboxLeafOnly
+    // 是否仅叶子节点展示 checkbox, show-checkbox 为 true 时有效
     showCheckboxLeafOnly: { type: Boolean, default: false },
     // 默认勾选值
     defaultCheckedKeys: { type: Array, default: () => [] },
     // 父子不互相关联
-    checkStriclty: { type: Boolean, default: false }
+    checkStrictly: { type: Boolean, default: false }
   },
   data() {
     this.big = null;
@@ -143,7 +159,8 @@ export default {
       endIndex: 70, // 渲染的结束区间
       throttleSrcoll: '', // 节流
       debounceInput: '',
-      isOnlyInCheckedSearch: false
+      isOnlyInCheckedSearch: false,
+      selectedNode: {}
     };
   },
   computed: {
@@ -165,7 +182,7 @@ export default {
         this.setCheckedKeys(newVal);
       }
     },
-    expandKeys(newVal, oldVal) {
+    defaultExpandedKeys(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.setExpand(newVal);
       }
@@ -195,7 +212,7 @@ export default {
       if (this.big._data.length === 0) return;
       if (op === 'init') {
         this.flatTree(this.big._data);
-        this.big.list.forEach(node => (this.big.listMap[node.id] = node));
+        this.big.list.forEach(node => (this.big.listMap[node[this.nodeKey]] = node));
       }
       this.initFilter(op);
       if (op === 'init' || op === 'restore') this.initExpand();
@@ -213,11 +230,12 @@ export default {
     // 初始化处理展开逻辑
     initExpand() {
       if (!this.big || this.big._data.length === 0) return;
-      if (this.expandKeys.length > 0) {
-        this.setExpand(this.expandKeys);
+      if (this.defaultExpandedKeys.length > 0) {
+        this.setExpand(this.defaultExpandedKeys);
         return;
       }
-      if (/^\d+$/.test(this.expandLevel)) {
+      // if (/^\d+$/.test(this.expandLevel)) {
+      if (this.expandLevel !== -1) {
         this.big.filterList.forEach(node => {
           node.isExpand = Boolean(node.path.length < this.expandLevel);
           node.isHidden = Boolean(node.path.length > this.expandLevel);
@@ -238,14 +256,14 @@ export default {
     setExpand(keys = []) {
       if (keys.length <= 0) return;
       if (!this.big || this.big._data.length === 0) return;
-      const nodes = keys.map(id => this.big.listMap[id]).filter(v => v);
+      const nodes = keys.map(key => this.big.listMap[key]).filter(v => v);
       const ids = Array.from(new Set(nodes.map(node => node.path).flat(1)));
       this.big.filterList.forEach(node => {
         if (node.isLeaf) {
           node.isExpand = false;
-          node.isHidden = Boolean(!ids.includes(node.parentId));
+          node.isHidden = Boolean(!ids.includes(node.parentKey));
         } else {
-          node.isExpand = Boolean(ids.includes(node.id));
+          node.isExpand = Boolean(ids.includes(node[this.nodeKey]));
           node.isHidden = false;
         }
         this.initNode(node);
@@ -267,7 +285,7 @@ export default {
         return;
       }
       this.clearChecked();
-      const nodes = keys.map(id => this.big.listMap[id]);
+      const nodes = keys.map(key => this.big.listMap[key]);
       nodes.forEach((node, index) => {
         if (node && node.isLeaf) {
           node.checked = true;
@@ -284,7 +302,7 @@ export default {
         return;
       }
       if (nodes.length > 0) {
-        const keys = nodes.map(i => i.id);
+        const keys = nodes.map(i => i[this.nodeKey]);
         this.setCheckedKeys(keys);
       }
     },
@@ -304,35 +322,40 @@ export default {
       this.showOrHiddenChildren(node, !node.isExpand);
     },
 
-    // 点击checkbox
+    // 点击 checkbox
     onChecked(node) {
       this.handleCheckedChange(node);
       this.emitChecked();
-      this.$emit('onClickCheckbox', node);
+      this.$emit('check', node);
+    },
+
+    // 点击 label
+    onClickLabel(node) {
+      this.selectedNode = node;
+
+      this.$emit('click-label', node);
     },
 
     // 发送给父组件选中信息
     emitChecked() {
       this.big.checkedNodes = this.big.list.filter(i => i.checked || i.indeterminate); // 返回”所有“选中的节点 或者 父节点(子节点部分选中)
-      this.big.checkedKeys = this.big.checkedNodes.map(i => i.id);
-      this.$emit('onChange', {
-        checkedKeys: this.big.checkedKeys,
-        checkedNodes: this.big.checkedNodes
-      });
+      this.big.checkedKeys = this.big.checkedNodes.map(i => i[this.nodeKey]);
+      this.$emit('check-change', this.big.checkedKeys, this.big.checkedNodes);
       this.setCount();
     },
     // 处理选中逻辑
     handleCheckedChange(node) {
       // 父子不互相关联
-      if (this.checkStriclty) {
+      if (this.checkStrictly) {
         node.indeterminate = node.isLeaf ? false : node.checked;
         return;
       }
       if (node.checked) node.indeterminate = false;
       this.doChildrenChecked(node);
-      this.doParentChecked(node.parentId);
+      this.doParentChecked(node.parentKey);
       this.big.disabledList.forEach((node, index) => {
-        if (!isBrother(node, this.big.disabledList[index + 1])) this.doParentChecked(node.parentId);
+        if (!isBrother(node, this.big.disabledList[index + 1]))
+          this.doParentChecked(node.parentKey);
       });
     },
 
@@ -365,15 +388,15 @@ export default {
     },
 
     // 处理自己及祖先
-    doParentChecked(parentId) {
-      if (parentId === null || parentId === undefined) return;
-      const allDirectChildren = findSubTree(this.big.filterTree, parentId);
-      const parentNode = findNode(this.big.filterTree, parentId);
+    doParentChecked(parentKey) {
+      if (parentKey === null || parentKey === undefined) return;
+      const allDirectChildren = findSubTree(this.big.filterTree, parentKey);
+      const parentNode = findNode(this.big.filterTree, parentKey);
       const childrenAllChecked = allDirectChildren.every(i => i.checked);
       this.checkParentIndeterminate(parentNode, allDirectChildren);
       parentNode.checked = childrenAllChecked;
       if (childrenAllChecked) parentNode.indeterminate = false;
-      if (parentNode.parentId !== null) this.doParentChecked(parentNode.parentId);
+      if (parentNode.parentKey !== null) this.doParentChecked(parentNode.parentKey);
     },
 
     // 子元素部分选中，核对祖先是否部分选中
@@ -602,6 +625,9 @@ export default {
         padding: 2px 18px 2px 15px;
         &:hover {
           background-color: #f9fafc;
+        }
+        &.active {
+          background-color: #f0f7ff;
         }
         &.is-hidden {
           display: none;

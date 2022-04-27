@@ -1,12 +1,13 @@
 /**
  * 自己 || 子 || 孙 是否含有关键字
  * @param {Object} node 当前节点
- * @param {String} keyword
+ * @param {String} keyword 关键字 (多个关键字用英文逗号","分隔)
  * @param {Array} list
  * @returns {Boolean}
  */
 export function isIncludesKeyword(node, keyword, list) {
-  const keywords = keyword.split(/[,，]/).filter(v => v);
+  // const keywords = keyword.split(/[,，]/).filter(v => v);
+  const keywords = keyword.split(',').filter(v => v);
   // const isInclude = node.label.includes(keyword);
   const isInclude = keywords.some(keyword => node.label.includes(keyword));
   if (isInclude) {

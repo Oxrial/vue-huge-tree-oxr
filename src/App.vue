@@ -2,12 +2,13 @@
   <div id="app">
     <huge-tree
       ref="huge-tree"
-      showCheckbox
-      hasInput
-      :defaultCheckedKeys="checkedKeys"
-      @onClickCheckbox="onClickCheckbox"
-      @onClickLabel="onClickLabel"
-      @onChange="onChange"
+      show-checkbox
+      show-search-bar
+      show-node-count
+      :default-checked-keys="checkedKeys"
+      @check="onClickCheckbox"
+      @click-label="onClickLabel"
+      @check-change="onChange"
     ></huge-tree>
   </div>
 </template>
@@ -27,23 +28,23 @@ export default {
         {
           label: '测试0',
           id: '0',
-          parentId: null,
+          parentKey: null,
           children: [
             {
               label: '测试0-0',
               id: '0-0',
-              parentId: '0',
+              parentKey: '0',
               children: [
                 {
                   label: '测试0-0-0',
                   id: '0-0-0',
-                  parentId: '0-0',
+                  parentKey: '0-0',
                   children: null
                 },
                 {
                   label: '测试0-0-1',
                   id: '0-0-1',
-                  parentId: '0-0',
+                  parentKey: '0-0',
                   children: null
                 }
               ]
@@ -51,20 +52,20 @@ export default {
             {
               label: '测试0-1',
               id: '0-1',
-              parentId: '0',
+              parentKey: '0',
               disabled: true,
               children: [
                 {
                   label: '测试0-1-0',
                   id: '0-1-0',
-                  parentId: '0-1',
+                  parentKey: '0-1',
                   disabled: true,
                   children: null
                 },
                 {
                   label: '测试0-1-1',
                   id: '0-1-1',
-                  parentId: '0-1',
+                  parentKey: '0-1',
                   disabled: true,
                   children: null
                 }
@@ -74,15 +75,11 @@ export default {
         },
         {
           label: '测试1',
-          id: 1,
-          parentId: null,
+          id: '1',
+          parentKey: null,
           children: null
         }
-      ],
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      }
+      ]
     };
   },
   computed: {},
@@ -103,7 +100,7 @@ export default {
     onClickLabel(node) {
       console.log(node);
     },
-    onChange({ checkedKeys, checkedNodes }) {
+    onChange(checkedKeys, checkedNodes) {
       console.log(checkedKeys, checkedNodes);
     }
   }

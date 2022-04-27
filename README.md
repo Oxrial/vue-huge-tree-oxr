@@ -129,49 +129,81 @@ export default {
 
 ## Attributes
 
-| 参数                 | 说明                                                                                         | 类型           | 可选值                                                  | 默认值               |
-| -------------------- | -------------------------------------------------------------------------------------------- | -------------- | ------------------------------------------------------- | -------------------- |
-| hasInput             | 是否含有过滤输入框,输入框过滤支持多个关键词,逗号隔开(中英都可以),eg: '位置 1，位置 2,位置 3' | Boolean        | --                                                      | false                |
-| placeholder          | 过滤输入框的 placeholder，配合 hasInput 使用                                                 | String         | --                                                      | 请输入关键字进行查找 |
-| indent               | 缩进                                                                                         | String, Number | --                                                      | 15                   |
-| expandLevel          | 展开程度                                                                                     | String, Number | 'all',1,2,3,,,                                          | 'all'                |
-| expandKeys           | 指定 id 展开, 若指定 id 展开，则 expandLevel 失效                                            | Array          |                                                         | []                   |
-| isLoading            | 是否展示'加载中...'指示状态                                                                  | Boolean        | --                                                      | false                |
-| checkedAction        | 操作 label 执行选中                                                                          | String         | 'none': 不选中；'click': 单击选中；'dblclick': 双击选中 | 'none'               |
-| emptyText            | 内容为空展示的文本                                                                           | String         | --                                                      | '暂无数据'           |
-| showCheckbox         | 是否展示 checkbox                                                                            | Boolean        | --                                                      | false                |
-| showCheckboxLeafOnly | 是否仅叶子节点展示 checkbox, 配合 showCheckbox = true 才有效。                               | Boolean        | --                                                      | false                |
-| defaultCheckedKeys   | 默认选中, setData 之后赋值。                                                                 | Array          | --                                                      | []                   |
-| checkStriclty        | 在显示复选框的情况下，是否严格的遵循父子不互相关联的做法                                     | Boolean        | --                                                      | false                |
+|参数|说明|类型|可选值|默认值|
+|-|-|-|-|-|
+|empty-text|内容为空的时候展示的文本|string|—|'暂无数据'|
+|node-key|每个树节点用来作为唯一标识的属性, 整棵树应该是**唯一**的|string|—|'id'|
+|highlight-current|是否高亮当前选中节点|boolean|true|false|
+|expand-level|节点展开的层级|number|-1: 展开所有节点;<br />1: 展开第一层 (最外层);<br />2: 展开第二层;<br />...|-1|
+|indent|相邻级节点间的水平缩进，单位为像素|number|—|16|
+|show-node-count|显示节点对应的数据量|boolean|true|false|
+|show-search-bar|显示搜索框, 多个关键字之间用英文逗号分隔||||
+|placeholder|搜索框的占位文本|string|—|请输入关键字, 多个关键字之间用英文逗号分隔|
+|default-expanded-keys|默认展开的节点的 key 的数组|array|—|—|
+|loading|是否显示数据加载时的状态|boolean|true|false|
+|loading-text|数据加载状态时提示的文字|string|—|'loading...'|
+|checked-action|点击 label 选中模式|string|'none': 不选中;<br />'click': 单击选中;<br />'dblclick': 双击选中|'none'|
+|show-checkbox|节点是否可被选择|boolean|true|false|
+|show-checkbox-leaf-only|是否仅叶子节点展示 checkbox, show-checkbox 为 true 时有效|boolean|true|false|
+|default-checked-keys|默认勾选的节点的 key 的数组 (**需要 setData 之后赋值**)||||
+|check-strictly|在显示复选框的情况下，是否严格的遵循父子不互相关联的做法|boolean|true|false|
 
-## 方法
 
-| 方法名称        | 说明                                 | 参数                                                           |
-| --------------- | ------------------------------------ | -------------------------------------------------------------- |
-| setData         | 设置 tree                            | tree(Array 类型)                                               |
-| setCheckedKeys  | 回显选中状态                         | id 组成的数组                                                  |
-| setCheckedNodes | 回显选中状态                         | node 节点组成的数组                                            |
-| getCheckedKeys  | 返回 id 组成的数组                   | --                                                             |
-| getCheckedNodes | 返回 node 节点组成的数组             | --                                                             |
-| clearChecked    | 清空所有选中                         | --                                                             |
-| setExpand       | 指定 id 展开                         | id 组成的数组                                                  |
-| showCheckedOnly | 只展示选中的项，此方法会置空过滤条件 | isOnlyInCheckedSearch, 是否只在选中的节点里进行筛选, 默认 true |
-| restore         | 对 showCheckedOnly 之后进行恢复      | --                                                             |
-| update          | 手动更新选中状态                     | --                                                             |
-| clear           | 清空内存占用                         | --                                                             |
+## Methods
+
+|方法名称|说明|参数|
+|-|-|-|
+|setData|导入<a href="#data-format">数据结构</a>|object[]|
+| setCheckedKeys  | 通过 keys 设置目前勾选的节点|勾选节点的 key 的数组|
+| setCheckedNodes | 设置目前勾选的节点|勾选节点数据的数组|
+| getCheckedKeys  | 若节点可被选择, 则返回目前被选中的节点的 key 所组成的数组|—|
+| getCheckedNodes | 若节点可被选择, 则返回目前被选中的节点所组成的数组|—|
+| clearChecked    | 清空所有已选中的节点|—|
+| setExpand       | 设置目前展开的节点|展开节点的 key 的数组|
+| showCheckedOnly | 只展示选中的项, 此方法会置空过滤条件 | (isOnlyInCheckedSearch): 是否只在选中的节点里进行筛选, 默认 `true` |
+| restore         | 对 showCheckedOnly 之后进行恢复      | —|
+| update          | 手动更新选中状态| —|
+| clear           | 清空内存占用| —|
 
 ## Events
 
-| 事件名称        | 说明                                   | 回调参数                         |
-| --------------- | -------------------------------------- | -------------------------------- |
-| onChange        | 选中状态变化触发                       | （{ checkedKeys, checkedNodes }) |
-| onClickLabel    | 点击 label 触发                        | node                             |
-| onClickCheckbox | 点击 checkbox 触发, 获取当前点击的节点 | node                             |
+| 事件名称| 说明| 回调参数|
+| - | - | - |
+| check-change| 选中状态变化触发|(checkedKeys, checkedNodes) 共两个参数, 依次为: 已选节点的 key 列表; 已选节点列表|
+| check |当复选框被点击的时候触发|当前节点|
+| click-label|节点 label 被点击时的回调|当前节点|
 
 ## Scoped Slot
 
-| name      | 说明                                                                                                |
-| --------- | --------------------------------------------------------------------------------------------------- |
-| default   | label 的 slot， eg： `<span slot-scope="{ slotScope }"><i>&#9733;</i> {{ slotScope.label }}</span>` |
-| pre-input | input 输入框前的 slot， eg： `<span slot="pre-input">https://</span>`                               |
-| loading   | 自定义加载中 slot， eg： `<i slot="loading">加载中...</i>`                                          |
+|name|说明|
+|-|-|
+|—|自定义树节点的内容, 例:  `<template v-slot="node">{{ node }}</template>` <a href="#node-format">参数详情</a> |
+|search-bar| 自定义搜索框的内容, 例:  `<template v-slot:search-bar>xxx</template>`|
+|loading| 自定义加载中 slot, 例:  `<template v-slot:loading>加载中...</template>`|
+
+#### <a id="data-format">数据结构</a>
+
+|属性|说明|类型|可选值|默认值|
+|-|-|-|-|-|
+|**label**|节点标签|string|—|—|
+|**id**|节点唯一标识 (属性名受 node-key 影响, 默认为"id")||||
+|**parentKey**|父节点的 key (根节点必须为 null)|string \| number|—|—|
+|disabled|设置禁用状态|boolean|true|false|
+|children|节点子元素|array|—|—|
+
+#### <a id="node-format">节点结构</a>
+
+|属性|说明|类型|
+|-|-|-|
+|label|节点标签|string|
+|disabled|禁用状态|boolean|
+|id|节点唯一标识 (属性名受 node-key 影响, 默认为"id")|string \| number|
+|parentKey|父节点的 key (根节点必须为 null)|string \| number|
+|children|节点子元素|array|
+|checked|勾选状态|boolean|
+|indeterminate|节点的子树中是否是部分选中|boolean|
+|isLeaf|是否为叶子节点|boolean|
+|path|节点位置|string[]|
+|isExpand|是否展开|boolean|
+|hidden|是否隐藏|boolean|
+|leafCount|后代元素数量|number|

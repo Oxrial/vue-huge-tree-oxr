@@ -1,3 +1,10 @@
+<!--
+ * @Description: Checkbox
+ * @Author: shenxh
+ * @Date: 2022-04-27 10:18:47
+ * @LastEditors: shenxh
+ * @LastEditTime: 2022-04-27 10:29:52
+-->
 <template>
   <div :class="['check-box']">
     <div
