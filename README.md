@@ -1,4 +1,9 @@
 # vue-huge-tree
+> 当数据量很大时, 树形图渲染会异常卡顿, 用户体验极差
+>
+> 本组件有效的解决了这个问题, 渲染速度比普通树形图提高 N 倍
+>
+> 海量数据建议不要放到 data 里，vue 依赖收集会导致内存占用过多。所以此插件没有使用 props 传递海量数据，而是通过 `setData(data)` 方法
 
 ## 安装
 
@@ -15,18 +20,17 @@ import 'vue-huge-tree/dist/vue-huge-tree.css'
 
 ## 使用
 
-> 海量数据建议不要放到 data 里，vue 依赖收集会导致内存占用过多。所以此插件没有使用 props 传递海量数据，而是通过 setData(data) 方法。
-
 ```
 <template>
   <vue-huge-tree
     ref="huge-tree"
-    showCheckbox
-    hasInput
-    :defaultCheckedKeys="checkedKeys"
-    @onClickCheckbox="onClickCheckbox"
-    @onClickLabel="onClickLabel"
-    @onChange="onChange"
+    show-checkbox
+    show-search-bar
+    show-node-count
+    :default-checked-keys="checkedKeys"
+    @check="onClickCheckbox"
+    @click-label="onClickLabel"
+    @check-change="onChange"
   ></vue-huge-tree>
 </template>
 
@@ -38,7 +42,6 @@ export default {
   components: {
     VueHugeTree,
   },
-  props: {},
   data() {
     return {
       checkedKeys: [],
@@ -46,62 +49,58 @@ export default {
         {
           label: '测试0',
           id: '0',
-          parentId: null,
+          parentKey: null,
           children: [
             {
               label: '测试0-0',
               id: '0-0',
-              parentId: '0',
+              parentKey: '0',
               children: [
                 {
                   label: '测试0-0-0',
                   id: '0-0-0',
-                  parentId: '0-0',
-                  children: null,
+                  parentKey: '0-0',
+                  children: null
                 },
                 {
                   label: '测试0-0-1',
                   id: '0-0-1',
-                  parentId: '0-0',
-                  children: null,
-                },
-              ],
+                  parentKey: '0-0',
+                  children: null
+                }
+              ]
             },
             {
               label: '测试0-1',
               id: '0-1',
-              parentId: '0',
+              parentKey: '0',
               disabled: true,
               children: [
                 {
                   label: '测试0-1-0',
                   id: '0-1-0',
-                  parentId: '0-1',
+                  parentKey: '0-1',
                   disabled: true,
-                  children: null,
+                  children: null
                 },
                 {
                   label: '测试0-1-1',
                   id: '0-1-1',
-                  parentId: '0-1',
+                  parentKey: '0-1',
                   disabled: true,
-                  children: null,
-                },
-              ],
-            },
-          ],
+                  children: null
+                }
+              ]
+            }
+          ]
         },
         {
           label: '测试1',
-          id: 1,
-          parentId: null,
-          children: null,
-        },
-      ],
-      defaultProps: {
-        children: 'children',
-        label: 'label',
-      },
+          id: '1',
+          parentKey: null,
+          children: null
+        }
+      ]
     };
   },
   mounted() {
@@ -118,10 +117,10 @@ export default {
     onClickLabel(node) {
       console.log(node);
     },
-    onChange({ checkedKeys, checkedNodes }) {
+    onChange(checkedKeys, checkedNodes) {
       console.log(checkedKeys, checkedNodes);
-    },
-  },
+    }
+  }
 };
 </script>
 
