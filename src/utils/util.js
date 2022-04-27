@@ -89,16 +89,8 @@ export function listToTree(filterList) {
     return;
   }
   if (!filterList || filterList.length === 0) return [];
-  let root = {
-    // 0: {
-    //   id: 0,
-    //   lalbel: '333',
-    //   childrenMap: {
-    //     1: {id: 1, label: '', childrenMap: {}},
-    //     2: {}
-    //   }
-    // },
-  };
+  let root = {};
+
   // 定义查找父节点的函数，根据 path
   const parentNode = (root, path) => {
     const _path = path.slice();
@@ -111,6 +103,7 @@ export function listToTree(filterList) {
     }
     return root;
   };
+
   // 设置filter后的 children
   const setChildren = root => {
     const nodes = Object.values(root);
@@ -127,6 +120,7 @@ export function listToTree(filterList) {
     parentNode(root, node.path)[node.id] = node;
   });
   setChildren(root);
+
   return Object.values(root);
 }
 
@@ -200,8 +194,10 @@ export function findNode(tree, rootId) {
  */
 export function isBrother(node1, node2) {
   if (!node1 || !node2) return false;
+
   const p1 = String(node1.path.slice(0, -1));
   const p2 = String(node2.path.slice(0, -1));
+
   return p1 === p2;
 }
 
@@ -223,6 +219,12 @@ export const throttle = function(cb, time) {
   };
 };
 
+/**
+ * @description: 节流函数
+ * @param {function} cb 回调函数
+ * @param {number} time 间隔时间 (ms)
+ * @return {*}
+ */
 export const debounce = function(cb, time) {
   return function() {
     clearTimeout(cb.timer);

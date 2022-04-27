@@ -3,8 +3,9 @@
  * @Author: shenxh
  * @Date: 2022-04-27 10:18:47
  * @LastEditors: shenxh
- * @LastEditTime: 2022-04-27 10:29:52
+ * @LastEditTime: 2022-04-27 20:12:56
 -->
+
 <template>
   <div :class="['check-box']">
     <div
@@ -114,16 +115,16 @@ export default {
     &::after {
       content: '\2713';
       position: absolute;
-      left: 2px;
-      top: -3px;
+      left: 3px;
+      top: -2px;
       font-size: 12px;
       transform: scale(0);
     }
     // 子元素部分选中
     &.is-part-checked::after {
       content: '\2013';
-      left: 3px;
-      top: -4px;
+      left: 4px;
+      top: -2px;
     }
     &.is-checked,
     &.is-part-checked {

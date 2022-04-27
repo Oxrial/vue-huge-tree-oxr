@@ -3,8 +3,9 @@
  * @Author: shenxh
  * @Date: 2022-04-27 10:18:47
  * @LastEditors: shenxh
- * @LastEditTime: 2022-04-27 17:05:35
+ * @LastEditTime: 2022-04-27 20:12:43
 -->
+
 <template>
   <div class="huge-tree">
     <section class="search-bar" v-if="showSearchBar">
@@ -27,7 +28,7 @@
           "
         ></i>
       </div>
-      <button class="search-btn" @click="init">搜索</button>
+      <!-- <button class="search-btn" @click="init">搜索</button> -->
     </section>
     <section ref="content-wrap" class="content-wrap" @scroll="onScroll">
       <div class="tree-phantom" :style="`height: ${phantomHeight}px`"></div>
@@ -80,6 +81,7 @@
     </section>
   </div>
 </template>
+
 <script>
 import Checkbox from '../checkbox';
 import {
@@ -541,6 +543,7 @@ export default {
   }
 };
 </script>
+
 <style lang="scss">
 .huge-tree {
   display: flex;
@@ -549,43 +552,57 @@ export default {
   height: 100%;
   .search-bar {
     display: flex;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     .input {
       flex: 1;
       position: relative;
       .filter-input {
-        width: 100%;
         box-sizing: border-box;
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+        font-size: 14px;
+        padding: 0 10px;
+        border-radius: 4px;
         border: 1px solid #dcdfe6;
-        border-right: none;
-        padding: 8px 10px;
+        outline: none;
+        color: #606266;
+        background-color: #fff;
+        transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
         &:focus {
-          outline: none;
           border-color: #409eff;
+        }
+        &::placeholder {
+          font-size: 14px;
+          color: #ccc;
         }
       }
       .clear-input {
         position: absolute;
-        border-radius: 50%;
         font-style: normal;
         width: 12px;
-        top: 10px;
         height: 12px;
-        right: 6px;
-        border: 1px solid #cccccc;
+        border-radius: 50%;
+        top: 10px;
+        right: 8px;
+        border: 1px solid #ccc;
         color: #ccc;
         display: inline-block;
         cursor: pointer;
         &::after {
-          content: '\00D7';
+          content: '\2716';
+          color: #ccc;
           position: absolute;
-          top: -6px;
-          left: 1px;
-          transform: scale(0.7);
+          top: -5px;
+          left: 0px;
+          transform: scale(0.4);
         }
         &:hover {
-          border-color: #409eff;
-          color: #409eff;
+          border-color: #aaa;
+          color: #aaa;
+          &::after {
+            color: #aaa;
+          }
         }
       }
     }
@@ -660,11 +677,10 @@ export default {
         .label {
           cursor: pointer;
           color: #606266;
-          &:hover {
-            color: #409eff;
-          }
+          font-size: 14px;
           .count {
             font-size: 12px;
+            color: #f00;
           }
         }
       }
