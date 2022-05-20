@@ -3,7 +3,7 @@
  * @Author: shenxh
  * @Date: 2022-04-27 10:18:47
  * @LastEditors: shenxh
- * @LastEditTime: 2022-04-27 20:12:43
+ * @LastEditTime: 2022-05-20 10:26:29
 -->
 
 <template>
@@ -30,7 +30,7 @@
       </div>
       <!-- <button class="search-btn" @click="init">搜索</button> -->
     </section>
-    <section ref="content-wrap" class="content-wrap" @scroll="onScroll">
+    <section v-if="renderList.length" ref="content-wrap" class="content-wrap" @scroll="onScroll">
       <div class="tree-phantom" :style="`height: ${phantomHeight}px`"></div>
       <div class="tree-content" :style="`transform: translateY(${startIndex * itemHeigth}px)`">
         <template v-for="(item, index) in renderList">
@@ -58,7 +58,7 @@
               :is-leaf="item.isLeaf"
               :show-checkbox-leaf-only="showCheckboxLeafOnly"
               :checked-action="checkedAction"
-              :show-checkbox="showCheckbox"
+              :show-checkbox="!item.hideCheckbox && showCheckbox"
               :check-striclty="checkStrictly"
               :node="item"
               @on-checked="onChecked(item)"
@@ -73,7 +73,7 @@
         </template>
       </div>
     </section>
-    <section v-if="renderList.length <= 0" class="no-data">
+    <section v-else class="no-data">
       <p v-if="loading || isSearching">
         <slot name="loading">{{ loadingText }}</slot>
       </p>
@@ -545,6 +545,25 @@ export default {
 </script>
 
 <style lang="scss">
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track-piece {
+  background: #efefef;
+}
+::-webkit-scrollbar-thumb {
+  background: #aaa;
+  min-width: 150px;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:vertical:hover {
+  background: #666;
+}
+::-webkit-scrollbar-thumb:horizontal:hover {
+  background: #666;
+}
 .huge-tree {
   display: flex;
   flex-direction: column;
@@ -687,6 +706,11 @@ export default {
     }
   }
   .no-data {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
     text-align: center;
   }
 }

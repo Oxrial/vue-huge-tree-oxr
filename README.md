@@ -200,6 +200,7 @@ export default {
 |parentKey|父节点的 key (根节点必须为 null)|string \| number|
 |children|节点子元素|array|
 |checked|勾选状态|boolean|
+|hideCheckbox|隐藏选择框|boolean|
 |indeterminate|节点的子树中是否是部分选中|boolean|
 |isLeaf|是否为叶子节点|boolean|
 |path|节点位置|array|
