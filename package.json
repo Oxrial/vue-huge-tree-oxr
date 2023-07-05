@@ -34,11 +34,11 @@
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^5.0.0",
     "lint-staged": "^9.4.2",
-    "node-sass": "^5.0.0",
     "prettier": "^1.18.2",
-    "sass-loader": "^10.2.1",
-    "style-loader": "^3.2.1",
-    "vue-template-compiler": "^2.6.10"
+    "sass": "^1.63.6",
+    "sass-loader": "^10.4.1",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.46.0"
   },
   "gitHooks": {
     "pre-push": "lint-staged"
