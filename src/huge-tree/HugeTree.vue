@@ -1,34 +1,23 @@
-<!--
- * @Description: HugeTree
- * @Author: shenxh
- * @Date: 2022-04-27 10:18:47
- * @LastEditors: shenxh
- * @LastEditTime: 2022-05-20 10:26:29
--->
-
 <template>
   <div class="huge-tree">
     <section class="search-bar" v-if="showSearchBar">
-      <slot name="search-bar"></slot>
-      <div class="input">
-        <input
-          type="text"
-          class="filter-input"
-          :placeholder="placeholder"
+      <slot
+        name="pre-input"
+        :func="
+          val => {
+            keyword = val;
+            init();
+          }
+        "
+      >
+        <el-input
           v-model="keyword"
+          clearable
+          placeholder="输入关键字过滤 [,] 分隔匹配"
           @keyup.13="init"
           @input="debounceInput"
         />
-        <i
-          class="clear-input"
-          v-if="keyword"
-          @click="
-            keyword = '';
-            init();
-          "
-        ></i>
-      </div>
-      <!-- <button class="search-btn" @click="init">搜索</button> -->
+      </slot>
     </section>
     <section v-if="renderList.length" ref="content-wrap" class="content-wrap" @scroll="onScroll">
       <div class="tree-phantom" :style="`height: ${phantomHeight}px`"></div>
@@ -45,12 +34,18 @@
               }
             ]"
             :style="`margin-left: ${(item.path.length - 1) * Number(indent)}px`"
+            @click="expandOnClickNode && onExpand(item, index)"
           >
             <div
               v-if="!item.isLeaf"
               :class="[item.isLeaf ? 'leaf-node' : 'expand-node', { 'is-expand': item.isExpand }]"
               @click="onExpand(item, index)"
-            ></div>
+            >
+              <slot name="exxpandicon" />
+            </div>
+            <div v-else>
+              <slot name="itemicon"><div class="item-node" /> </slot>
+            </div>
             <xx-checkbox
               v-model="item.checked"
               :indeterminate="item.indeterminate"
@@ -117,8 +112,10 @@ export default {
     'xx-checkbox': Checkbox
   },
   props: {
+    checkOver: { type: Number, default: 1000 },
+    /**强制使用id，提高性能 */
     // 每个树节点用来作为唯一标识的属性，整棵树应该是唯一的
-    nodeKey: { type: String, default: 'id' },
+    // nodeKey: { type: String, default: 'id' },
     // 是否高亮当前选中节
     highlightCurrent: { type: Boolean, default: false },
     // 展开层级 -1: 展开全部; 1: 只展示第一层(最外层); 2: 展示到第二层; ...
@@ -214,7 +211,7 @@ export default {
       if (this.big._data.length === 0) return;
       if (op === 'init') {
         this.flatTree(this.big._data);
-        this.big.list.forEach(node => (this.big.listMap[node[this.nodeKey]] = node));
+        this.big.list.forEach(node => (this.big.listMap[node.id] = node));
       }
       this.initFilter(op);
       if (op === 'init' || op === 'restore') this.initExpand();
@@ -236,6 +233,10 @@ export default {
         this.setExpand(this.defaultExpandedKeys);
         return;
       }
+      this.initExpandTrigger();
+      this.setCount();
+    },
+    initExpandTrigger() {
       // if (/^\d+$/.test(this.expandLevel)) {
       if (this.expandLevel !== -1) {
         this.big.filterList.forEach(node => {
@@ -251,9 +252,7 @@ export default {
           this.initNode(node);
         });
       }
-      this.setCount();
     },
-
     // 指定id展开
     setExpand(keys = []) {
       if (keys.length <= 0) return;
@@ -265,7 +264,7 @@ export default {
           node.isExpand = false;
           node.isHidden = Boolean(!ids.includes(node.parentKey));
         } else {
-          node.isExpand = Boolean(ids.includes(node[this.nodeKey]));
+          node.isExpand = Boolean(ids.includes(node.id));
           node.isHidden = false;
         }
         this.initNode(node);
@@ -304,7 +303,7 @@ export default {
         return;
       }
       if (nodes.length > 0) {
-        const keys = nodes.map(i => i[this.nodeKey]);
+        const keys = nodes.map(i => i.id);
         this.setCheckedKeys(keys);
       }
     },
@@ -334,14 +333,13 @@ export default {
     // 点击 label
     onClickLabel(node) {
       this.selectedNode = node;
-
       this.$emit('click-label', node);
     },
 
     // 发送给父组件选中信息
     emitChecked() {
       this.big.checkedNodes = this.big.list.filter(i => i.checked || i.indeterminate); // 返回”所有“选中的节点 或者 父节点(子节点部分选中)
-      this.big.checkedKeys = this.big.checkedNodes.map(i => i[this.nodeKey]);
+      this.big.checkedKeys = this.big.checkedNodes.map(i => i.id);
       this.$emit('check-change', this.big.checkedKeys, this.big.checkedNodes);
       this.setCount();
     },
@@ -479,8 +477,10 @@ export default {
     // 回到顶部
     backToTop() {
       this.$nextTick(() => {
-        this.$refs['content-wrap'].scrollTop = 0;
-        this.setRenderRange();
+        if (this.$refs['content-wrap']) {
+          this.$refs['content-wrap'].scrollTop = 0;
+          this.setRenderRange();
+        }
       });
     },
 
@@ -569,72 +569,11 @@ export default {
   flex-direction: column;
   min-height: 50px;
   height: 100%;
+  * {
+    transition: all 0.3s ease-in-out;
+  }
   .search-bar {
-    display: flex;
-    margin-bottom: 10px;
-    .input {
-      flex: 1;
-      position: relative;
-      .filter-input {
-        box-sizing: border-box;
-        width: 100%;
-        height: 35px;
-        line-height: 35px;
-        font-size: 14px;
-        padding: 0 10px;
-        border-radius: 4px;
-        border: 1px solid #dcdfe6;
-        outline: none;
-        color: #606266;
-        background-color: #fff;
-        transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-        &:focus {
-          border-color: #409eff;
-        }
-        &::placeholder {
-          font-size: 14px;
-          color: #ccc;
-        }
-      }
-      .clear-input {
-        position: absolute;
-        font-style: normal;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        top: 10px;
-        right: 8px;
-        border: 1px solid #ccc;
-        color: #ccc;
-        display: inline-block;
-        cursor: pointer;
-        &::after {
-          content: '\2716';
-          color: #ccc;
-          position: absolute;
-          top: -5px;
-          left: 0px;
-          transform: scale(0.4);
-        }
-        &:hover {
-          border-color: #aaa;
-          color: #aaa;
-          &::after {
-            color: #aaa;
-          }
-        }
-      }
-    }
-    .search-btn {
-      width: 50px;
-      background-color: #409eff;
-      color: #ffffff;
-      border: none;
-      cursor: pointer;
-      &:hover {
-        background-color: #228af1;
-      }
-    }
+    margin-bottom: 20px;
   }
   .content-wrap {
     position: relative;
@@ -655,7 +594,7 @@ export default {
       .item {
         display: flex;
         align-items: center;
-        padding: 2px 18px 2px 15px;
+        cursor: pointer;
         &:hover {
           background-color: #f9fafc;
         }
@@ -665,12 +604,18 @@ export default {
         &.is-hidden {
           display: none;
         }
+        .expand-node,
+        .item-node {
+          width: 24px;
+          height: 26px;
+          line-height: 26px;
+          cursor: auto;
+        }
         .expand-node {
           position: relative;
-          right: 4px;
-          width: 10px;
-          height: 10px;
-          line-height: 10px;
+          display: flex;
+          justify-self: center;
+          align-items: center;
           cursor: pointer;
           &:hover {
             color: #409eff;

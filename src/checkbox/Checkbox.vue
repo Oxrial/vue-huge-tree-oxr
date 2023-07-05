@@ -1,21 +1,25 @@
-<!--
- * @Description: Checkbox
- * @Author: shenxh
- * @Date: 2022-04-27 10:18:47
- * @LastEditors: shenxh
- * @LastEditTime: 2022-04-27 20:29:29
--->
-
 <template>
   <div :class="['check-box']">
-    <div
-      v-if="showBox"
-      :class="[
-        'box',
-        { 'is-checked': checked, 'is-part-checked': indeterminate, 'is-disabled': disabled }
-      ]"
-      @click="onChecked"
-    ></div>
+    <el-tooltip
+      effect="dark"
+      content="至多一次选择1000条"
+      placement="top-start"
+      :disabled="node.isLeaf || node.leafCount <= checkOver"
+    >
+      <div
+        v-if="showBox"
+        :class="[
+          'box',
+          {
+            'is-checked': checked,
+            'is-part-checked': indeterminate,
+            'is-disabled': disabled,
+            'check-pver': !node.isLeaf && node.leafCount > checkOver
+          }
+        ]"
+        @click="onChecked"
+      />
+    </el-tooltip>
     <div @click="onSingleChecked" @dblclick="onDBLChecked">
       <slot />
     </div>
@@ -32,6 +36,7 @@ export default {
   },
   components: {},
   props: {
+    checkOver: { type: Number, default: 1000 },
     checked: { type: Boolean, default: false },
     indeterminate: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
@@ -107,24 +112,43 @@ export default {
     height: 14px;
     margin-right: 8px;
     border-radius: 2px;
+    box-sizing: border-box;
     border: 1px solid #dcdfe6;
     cursor: pointer;
     &:hover {
       border-color: #409eff;
     }
     &::after {
-      content: '\2713';
+      content: '';
       position: absolute;
-      left: 2px;
-      top: -2px;
-      font-size: 12px;
-      transform: scale(0);
+      box-sizing: content-box;
+      border: 1px solid #fff;
+      border-left: 0;
+      border-top: 0;
+      height: 7px;
+      left: 5px;
+      top: 2px;
+      transform: rotate(45deg) scaleY(0);
+      width: 3px;
+      transition: transform 0.15s ease-in 0.05s;
+      transform-origin: center;
     }
     // 子元素部分选中
     &.is-part-checked::after {
-      content: '\2013';
-      left: 3px;
-      top: -2px;
+      content: '';
+      position: absolute;
+      display: block;
+      background-color: #fff;
+      height: 2px;
+      transform: scale(0.5);
+      left: 0;
+      right: 0;
+      top: 6px;
+    }
+    &.is-checked {
+      &::after {
+        transform: rotate(45deg) scaleY(1);
+      }
     }
     &.is-checked,
     &.is-part-checked {
@@ -132,14 +156,14 @@ export default {
       background-color: #409eff;
       border-color: #409eff;
       transition: all 0.25s;
-      &::after {
-        transform: scale(1);
-      }
     }
     &.is-disabled {
       background: #f2f6fc;
       color: #c0c4cc;
       border-color: #c0c4cc;
+      cursor: not-allowed;
+    }
+    &.check-over {
       cursor: not-allowed;
     }
   }
