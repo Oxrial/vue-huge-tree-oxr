@@ -2,7 +2,7 @@
     <div class="huge-tree">
         <section class="search-bar" v-if="showSearchBar">
             <slot
-                name="pre-input"
+                name="search-bar"
                 :func="
                     val => {
                         keyword = val
@@ -52,10 +52,12 @@
                             ]"
                             @click="onExpand(item, index)"
                         >
-                            <slot name="exxpandicon" />
+                            <slot name="expand-icon" :item="item" :index="index" />
                         </div>
                         <div v-else>
-                            <slot name="itemicon"><div class="item-node" /> </slot>
+                            <slot name="item-icon" :item="item" :index="index">
+                                <div class="item-node" />
+                            </slot>
                         </div>
                         <Checkbox
                             v-model="item.checked"

@@ -7,6 +7,7 @@
                 show-search-bar
                 show-node-count
                 :expand-level="2"
+                :expand-on-click-node="true"
                 :default-checked-keys="checkedKeys"
                 @check="onClickCheckbox"
                 @click-label="onClickLabel"
@@ -23,7 +24,6 @@ export default {
     components: {
         HugeTree
     },
-    props: {},
     data() {
         return {
             checkedKeys: [],
@@ -50,13 +50,9 @@ export default {
             ]
         }
     },
-    computed: {},
-    watch: {},
-    created() {},
     mounted() {
         this.getTreeData()
     },
-    beforeDestroy() {},
     methods: {
         getTreeData() {
             this.$refs['huge-tree'].setData(this.data)
