@@ -6,19 +6,19 @@
  * @returns {Boolean}
  */
 export function isIncludesKeyword(node, keyword, list) {
-  // const keywords = keyword.split(/[,，]/).filter(v => v);
-  const keywords = keyword.split(',').filter(v => v);
-  // const isInclude = node.label.includes(keyword);
-  const isInclude = keywords.some(keyword => node.label.includes(keyword.toLowerCase()));
-  if (isInclude) {
-    // 自己匹配上了
-    return true;
-  }
-  if (!node.isLeaf) {
-    const allDirectChildren = list.filter(i => i.parentKey === node.id);
-    return allDirectChildren.some(i => isIncludesKeyword(i, keyword, list));
-  }
-  return false;
+    // const keywords = keyword.split(/[,，]/).filter(v => v);
+    const keywords = keyword.split(',').filter(v => v)
+    // const isInclude = node.label.includes(keyword);
+    const isInclude = keywords.some(keyword => node.label.includes(keyword.toLowerCase()))
+    if (isInclude) {
+        // 自己匹配上了
+        return true
+    }
+    if (!node.isLeaf) {
+        const allDirectChildren = list.filter(i => i.pId === node.id)
+        return allDirectChildren.some(i => isIncludesKeyword(i, keyword, list))
+    }
+    return false
 }
 
 /**
@@ -27,16 +27,16 @@ export function isIncludesKeyword(node, keyword, list) {
  * @param {Array} list
  */
 export function isCheckedOrIndeterminate(node, list) {
-  const is = node.checked || node.indeterminate;
-  if (is) {
-    // 自己匹配上了
-    return true;
-  }
-  if (!node.isLeaf) {
-    const allDirectChildren = list.filter(i => i.parentKey === node.id);
-    return allDirectChildren.some(i => isCheckedOrIndeterminate(i, list));
-  }
-  return false;
+    const is = node.checked || node.indeterminate
+    if (is) {
+        // 自己匹配上了
+        return true
+    }
+    if (!node.isLeaf) {
+        const allDirectChildren = list.filter(i => i.pId === node.id)
+        return allDirectChildren.some(i => isCheckedOrIndeterminate(i, list))
+    }
+    return false
 }
 
 /**
@@ -46,14 +46,14 @@ export function isCheckedOrIndeterminate(node, list) {
  * @returns {Number}
  */
 export function getLeafCount(tree, node) {
-  const subTree = findSubTree(tree, node.id);
-  let count = 0;
-  depthFirstEach({ tree: subTree }, node => {
-    if (node.isLeaf) {
-      count++;
-    }
-  });
-  return count;
+    const subTree = findSubTree(tree, node.id)
+    let count = 0
+    depthFirstEach({ tree: subTree }, node => {
+        if (node.isLeaf) {
+            count++
+        }
+    })
+    return count
 }
 
 /**
@@ -62,66 +62,66 @@ export function getLeafCount(tree, node) {
  * @param {Callback}} cb 回调函数，参数为 node
  */
 export function depthFirstEach({ tree, path = [], init = false }, cb) {
-  if (!Array.isArray(tree)) {
-    console.warn('The tree in the first argument to function depthFirstEach must be an array');
-    return;
-  }
-  if (!tree || tree.length === 0) return;
-  for (let node of tree) {
-    const hasChildren = node.children && node.children.length > 0;
-    if (init) {
-      node.path = [...path, node.id];
-      node.isLeaf = !hasChildren;
+    if (!Array.isArray(tree)) {
+        console.warn('The tree in the first argument to function depthFirstEach must be an array')
+        return
     }
-    if (cb) {
-      const res = cb(node);
-      if (res === 'break') return;
+    if (!tree || tree.length === 0) return
+    for (let node of tree) {
+        const hasChildren = node.children && node.children.length > 0
+        if (init) {
+            node.path = [...path, node.id]
+            node.isLeaf = !hasChildren
+        }
+        if (cb) {
+            const res = cb(node)
+            if (res === 'break') return
+        }
+        if (hasChildren) {
+            depthFirstEach({ tree: node.children, path: node.path, init }, cb)
+        }
     }
-    if (hasChildren) {
-      depthFirstEach({ tree: node.children, path: node.path, init }, cb);
-    }
-  }
 }
 
 export function listToTree(filterList) {
-  if (!Array.isArray(filterList)) {
-    console.warn('The parameter filterList to function listToTree must be an array');
-    return;
-  }
-  if (!filterList || filterList.length === 0) return [];
-  let root = {};
-
-  // 定义查找父节点的函数，根据 path
-  const parentNode = (root, path) => {
-    const _path = path.slice();
-    const rootId = _path.shift();
-    if (_path.length > 1) {
-      return parentNode(root[rootId].childrenMap, _path);
+    if (!Array.isArray(filterList)) {
+        console.warn('The parameter filterList to function listToTree must be an array')
+        return
     }
-    if (_path.length === 1) {
-      return root[rootId].childrenMap;
+    if (!filterList || filterList.length === 0) return []
+    let root = {}
+
+    // 定义查找父节点的函数，根据 path
+    const parentNode = (root, path) => {
+        const _path = path.slice()
+        const rootId = _path.shift()
+        if (_path.length > 1) {
+            return parentNode(root[rootId].childrenMap, _path)
+        }
+        if (_path.length === 1) {
+            return root[rootId].childrenMap
+        }
+        return root
     }
-    return root;
-  };
 
-  // 设置filter后的 children
-  const setChildren = root => {
-    const nodes = Object.values(root);
-    for (let node of nodes) {
-      node.children = Object.values(node.childrenMap);
-      if (node.children && node.children.length > 0) {
-        setChildren(node.childrenMap);
-      }
+    // 设置filter后的 children
+    const setChildren = root => {
+        const nodes = Object.values(root)
+        for (let node of nodes) {
+            node.children = Object.values(node.childrenMap)
+            if (node.children && node.children.length > 0) {
+                setChildren(node.childrenMap)
+            }
+        }
     }
-  };
 
-  filterList.forEach(node => {
-    node.childrenMap = {};
-    parentNode(root, node.path)[node.id] = node;
-  });
-  setChildren(root);
+    filterList.forEach(node => {
+        node.childrenMap = {}
+        parentNode(root, node.path)[node.id] = node
+    })
+    setChildren(root)
 
-  return Object.values(root);
+    return Object.values(root)
 }
 
 /**
@@ -130,19 +130,19 @@ export function listToTree(filterList) {
  * @param {Callback} cb
  */
 export function breadthFirstEach({ tree, limitDeep = Number.MAX_SAFE_INTEGER, deep = 0 }, cb) {
-  if (!Array.isArray(tree)) {
-    console.warn('The tree in the first argument to function breadthFirstEach must be an array');
-    return;
-  }
-  if (!tree || tree.length === 0) return;
-  tree.forEach(node => {
-    if (cb) cb(node);
-  });
-  const childrenList = tree
-    .filter(node => node.children)
-    .map(i => i.children)
-    .flat(1);
-  breadthFirstEach({ tree: childrenList, limitDeep, deep: deep++ }, cb);
+    if (!Array.isArray(tree)) {
+        console.warn('The tree in the first argument to function breadthFirstEach must be an array')
+        return
+    }
+    if (!tree || tree.length === 0) return
+    tree.forEach(node => {
+        if (cb) cb(node)
+    })
+    const childrenList = tree
+        .filter(node => node.children)
+        .map(i => i.children)
+        .flat(1)
+    breadthFirstEach({ tree: childrenList, limitDeep, deep: deep++ }, cb)
 }
 
 /**
@@ -152,18 +152,18 @@ export function breadthFirstEach({ tree, limitDeep = Number.MAX_SAFE_INTEGER, de
  * @return {Object} 子树
  */
 export function findSubTree(tree, rootId) {
-  if (!Array.isArray(tree)) {
-    console.warn('The parameter tree to function breadthFirstEach must be an array');
-    return;
-  }
-  if (!tree || tree.length === 0) return [];
-  const item = tree.find(node => node.id === rootId);
-  if (item) return item.children || [];
-  const childrenList = tree
-    .filter(node => node.children)
-    .map(i => i.children)
-    .flat(1);
-  return findSubTree(childrenList, rootId);
+    if (!Array.isArray(tree)) {
+        console.warn('The parameter tree to function breadthFirstEach must be an array')
+        return
+    }
+    if (!tree || tree.length === 0) return []
+    const item = tree.find(node => node.id === rootId)
+    if (item) return item.children || []
+    const childrenList = tree
+        .filter(node => node.children)
+        .map(i => i.children)
+        .flat(1)
+    return findSubTree(childrenList, rootId)
 }
 
 /**
@@ -173,18 +173,18 @@ export function findSubTree(tree, rootId) {
  * @return {Object} node
  */
 export function findNode(tree, rootId) {
-  if (!Array.isArray(tree)) {
-    console.warn('The parameter tree to function findNode must be an array');
-    return;
-  }
-  if (!tree || tree.length === 0) return {};
-  const item = tree.find(node => node.id === rootId);
-  if (item) return item;
-  const childrenList = tree
-    .filter(node => node.children)
-    .map(i => i.children)
-    .flat(1);
-  return findNode(childrenList, rootId);
+    if (!Array.isArray(tree)) {
+        console.warn('The parameter tree to function findNode must be an array')
+        return
+    }
+    if (!tree || tree.length === 0) return {}
+    const item = tree.find(node => node.id === rootId)
+    if (item) return item
+    const childrenList = tree
+        .filter(node => node.children)
+        .map(i => i.children)
+        .flat(1)
+    return findNode(childrenList, rootId)
 }
 
 /**
@@ -193,31 +193,31 @@ export function findNode(tree, rootId) {
  * @param {Object} node2
  */
 export function isBrother(node1, node2) {
-  if (!node1 || !node2) return false;
+    if (!node1 || !node2) return false
 
-  const p1 = String(node1.path.slice(0, -1));
-  const p2 = String(node2.path.slice(0, -1));
+    const p1 = String(node1.path.slice(0, -1))
+    const p2 = String(node2.path.slice(0, -1))
 
-  return p1 === p2;
+    return p1 === p2
 }
 
 // throttle(fn, 300)
 
 export const throttle = function(cb, time) {
-  let last = 0;
-  return function() {
-    let now = Date.now();
-    if (now - last > time) {
-      cb();
-      last = now;
-    } else {
-      clearTimeout(cb.timer);
-      cb.timer = setTimeout(() => {
-        cb();
-      }, time);
+    let last = 0
+    return function() {
+        let now = Date.now()
+        if (now - last > time) {
+            cb()
+            last = now
+        } else {
+            clearTimeout(cb.timer)
+            cb.timer = setTimeout(() => {
+                cb()
+            }, time)
+        }
     }
-  };
-};
+}
 
 /**
  * @description: 节流函数
@@ -226,49 +226,49 @@ export const throttle = function(cb, time) {
  * @return {*}
  */
 export const debounce = function(cb, time) {
-  return function() {
-    clearTimeout(cb.timer);
-    cb.timer = setTimeout(() => {
-      cb();
-    }, time);
-  };
-};
+    return function() {
+        clearTimeout(cb.timer)
+        cb.timer = setTimeout(() => {
+            cb()
+        }, time)
+    }
+}
 
 export const deepCopy = function(obj, cache = []) {
-  if (obj === null || typeof obj !== 'object') {
-    return obj;
-  }
+    if (obj === null || typeof obj !== 'object') {
+        return obj
+    }
 
-  // 避免循环引用导致爆栈
-  const hit = cache.find(i => i.original === obj);
-  if (hit) {
-    return hit.copy;
-  }
+    // 避免循环引用导致爆栈
+    const hit = cache.find(i => i.original === obj)
+    if (hit) {
+        return hit.copy
+    }
 
-  let copy = Array.isArray(obj) ? [] : {};
+    let copy = Array.isArray(obj) ? [] : {}
 
-  cache.push({
-    original: obj,
-    copy
-  });
+    cache.push({
+        original: obj,
+        copy
+    })
 
-  Object.keys(obj).forEach(key => {
-    copy[key] = deepCopy(obj[key], cache);
-  });
+    Object.keys(obj).forEach(key => {
+        copy[key] = deepCopy(obj[key], cache)
+    })
 
-  return copy;
-};
+    return copy
+}
 
 // 基本数据类型置 null, 清空内存占用
 export const clearAll = function(obj) {
-  if (typeof obj === 'function' || obj === null || typeof obj !== 'object') {
-    // console.log('obj---->', obj);
-    obj = null;
-    return;
-  }
+    if (typeof obj === 'function' || obj === null || typeof obj !== 'object') {
+        // console.log('obj---->', obj);
+        obj = null
+        return
+    }
 
-  Object.keys(obj).forEach(key => {
-    clearAll(obj[key]);
-    obj[key] = null;
-  });
-};
+    Object.keys(obj).forEach(key => {
+        clearAll(obj[key])
+        obj[key] = null
+    })
+}

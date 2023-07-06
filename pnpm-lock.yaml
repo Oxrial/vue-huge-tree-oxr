@@ -12,6 +12,9 @@ dependencies:
     version: 2.7.14
 
 devDependencies:
+  '@babel/preset-env':
+    specifier: ^7.22.6
+    version: 7.22.6(@babel/core@7.22.6)
   '@vue/cli-plugin-babel':
     specifier: ^4.0.0
     version: 4.5.19(@vue/cli-service@4.5.19)(core-js@3.31.0)(vue@2.7.14)

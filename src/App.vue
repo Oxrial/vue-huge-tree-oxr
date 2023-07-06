@@ -1,118 +1,91 @@
 <template>
-  <div id="app">
-    <div class="huge-tree-wrap">
-      <huge-tree
-        ref="huge-tree"
-        show-checkbox
-        show-search-bar
-        show-node-count
-        :default-checked-keys="checkedKeys"
-        @check="onClickCheckbox"
-        @click-label="onClickLabel"
-        @check-change="onChange"
-      ></huge-tree>
+    <div id="app">
+        <div class="huge-tree-wrap">
+            <huge-tree
+                ref="huge-tree"
+                show-checkbox
+                show-search-bar
+                show-node-count
+                :expand-level="2"
+                :default-checked-keys="checkedKeys"
+                @check="onClickCheckbox"
+                @click-label="onClickLabel"
+                @check-change="onChange"
+            />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
-import HugeTree from './huge-tree';
+import HugeTree from './huge-tree'
 
 export default {
-  components: {
-    HugeTree
-  },
-  props: {},
-  data() {
-    return {
-      checkedKeys: [],
-      treeData: [
-        {
-          label: '测试0',
-          id: '0',
-          parentKey: null,
-          children: [
-            {
-              label: '测试0-0',
-              id: '0-0',
-              parentKey: '0',
-              children: [
+    components: {
+        HugeTree
+    },
+    props: {},
+    data() {
+        return {
+            checkedKeys: [],
+            data: [
                 {
-                  label: '测试0-0-0',
-                  id: '0-0-0',
-                  parentKey: '0-0',
-                  children: null
-                },
-                {
-                  label: '测试0-0-1',
-                  id: '0-0-1',
-                  parentKey: '0-0',
-                  children: null
+                    id: '0',
+                    label: 'ALL',
+                    value: 'value_All',
+                    pId: null,
+                    children: Array.from(Array(10).keys(), v => ({
+                        id: '0-' + v,
+                        pId: '0',
+                        label: 'label_' + v,
+                        value: 'value_' + v,
+                        children: Array.from(Array(1000).keys(), cv => ({
+                            id: '0-' + v + '-' + cv,
+                            pId: '0-' + v,
+                            disabled: cv === 1,
+                            label: 'label_' + v + '-' + cv,
+                            value: 'value_' + v + '-' + cv
+                        }))
+                    }))
                 }
-              ]
-            },
-            {
-              label: '测试0-1',
-              id: '0-1',
-              parentKey: '0',
-              disabled: true,
-              children: [
-                {
-                  label: '测试0-1-0',
-                  id: '0-1-0',
-                  parentKey: '0-1',
-                  disabled: true,
-                  children: null
-                },
-                {
-                  label: '测试0-1-1',
-                  id: '0-1-1',
-                  parentKey: '0-1',
-                  disabled: true,
-                  children: null
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '测试1',
-          id: '1',
-          parentKey: null,
-          children: null
+            ]
         }
-      ]
-    };
-  },
-  computed: {},
-  watch: {},
-  created() {},
-  mounted() {
-    this.getTreeData();
-  },
-  beforeDestroy() {},
-  methods: {
-    getTreeData() {
-      this.$refs['huge-tree'].setData(this.treeData);
-      this.checkedKeys = ['0-0-0', '0-1-1'];
     },
-    onClickCheckbox(node) {
-      console.log(node);
+    computed: {},
+    watch: {},
+    created() {},
+    mounted() {
+        this.getTreeData()
     },
-    onClickLabel(node) {
-      console.log(node);
-    },
-    onChange(checkedKeys, checkedNodes) {
-      console.log(checkedKeys, checkedNodes);
+    beforeDestroy() {},
+    methods: {
+        getTreeData() {
+            this.$refs['huge-tree'].setData(this.data)
+            this.checkedKeys = ['0-0', '0-1-1']
+        },
+        onClickCheckbox(node) {
+            console.log('onClickCheckbox ~ node>>> :', node)
+            console.log('------')
+        },
+        onClickLabel(node) {
+            console.log('onClickLabel ~ node>>> :', node)
+            console.log('------')
+        },
+        onChange(checkedKeys, checkedNodes) {
+            console.log('onChange ~ checkedKeys>>> :', checkedKeys)
+            console.log('onChange ~ checkedNodes>>> :', checkedNodes)
+            const leafNode = checkedNodes.filter(n => n.isLeaf)
+            console.log('onChange ~ leafNode>>> :', leafNode)
+            console.log('------')
+        }
     }
-  }
-};
+}
 </script>
 
 <style scoped lang="scss">
 .huge-tree-wrap {
-  width: 200px;
-  height: 500px;
-  border: 1px solid #efefef;
+    width: 50%;
+    height: 50vh;
+    border: 1px solid #efefef;
+    margin: 10% auto;
 }
 </style>

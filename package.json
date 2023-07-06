@@ -1,59 +1,61 @@
 {
-  "name": "vue-huge-tree",
-  "version": "1.0.4",
-  "private": false,
-  "author": "Shen Xianhui",
-  "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/shenxianhui/vue-huge-tree"
-  },
-  "main": "dist/vue-huge-tree.umd.min.js",
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name vue-huge-tree src/index.js",
-    "lint": "vue-cli-service lint"
-  },
-  "dependencies": {
-    "core-js": "^3.3.2",
-    "element-ui": "^2.15.13",
-    "vue": "^2.6.10"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.0.0",
-    "@vue/cli-plugin-eslint": "^4.0.0",
-    "@vue/cli-plugin-router": "^4.0.0",
-    "@vue/cli-plugin-vuex": "^4.0.0",
-    "@vue/cli-service": "^4.0.0",
-    "@vue/eslint-config-prettier": "^5.0.0",
-    "babel-eslint": "^10.0.3",
-    "babel-plugin-component": "^1.1.1",
-    "compression-webpack-plugin": "^3.0.0",
-    "eslint": "^5.16.0",
-    "eslint-config-elemefe": "^0.3.0",
-    "eslint-plugin-html": "^6.2.0",
-    "eslint-plugin-json": "^3.1.0",
-    "eslint-plugin-prettier": "^3.1.1",
-    "eslint-plugin-vue": "^5.0.0",
-    "lint-staged": "^9.4.2",
-    "prettier": "^1.18.2",
-    "sass": "^1.63.6",
-    "sass-loader": "^10.4.1",
-    "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.46.0"
-  },
-  "gitHooks": {
-    "pre-push": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,vue}": [
-      "vue-cli-service lint",
-      "git add"
-    ]
-  },
-  "eslintConfig": {
-    "rules": {
-      "no-console": "off"
+    "name": "vue-huge-tree-oxr",
+    "version": "1.0.0",
+    "description": "A based from shenxianhui/vue-huge-tree@1.0.4 ，去除node-sass，使用sass，使用element-ui 搜索框，添加至多选中限制默认1000，使用id,pId作为唯一寻址提高渲染速度，样式动画调整",
+    "private": false,
+    "author": "Oxrial",
+    "license": "ISC",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Oxrial/vue-huge-tree-oxr"
+    },
+    "main": "dist/vue-huge-tree-oxr.umd.min.js",
+    "scripts": {
+        "serve": "vue-cli-service serve",
+        "build": "vue-cli-service build --target lib --name vue-huge-tree-oxr src/index.js",
+        "lint": "vue-cli-service lint"
+    },
+    "dependencies": {
+        "core-js": "^3.3.2",
+        "element-ui": "^2.15.13",
+        "vue": "^2.6.10"
+    },
+    "devDependencies": {
+        "@babel/preset-env": "^7.22.6",
+        "@vue/cli-plugin-babel": "^4.0.0",
+        "@vue/cli-plugin-eslint": "^4.0.0",
+        "@vue/cli-plugin-router": "^4.0.0",
+        "@vue/cli-plugin-vuex": "^4.0.0",
+        "@vue/cli-service": "^4.0.0",
+        "@vue/eslint-config-prettier": "^5.0.0",
+        "babel-eslint": "^10.0.3",
+        "babel-plugin-component": "^1.1.1",
+        "compression-webpack-plugin": "^3.0.0",
+        "eslint": "^5.16.0",
+        "eslint-config-elemefe": "^0.3.0",
+        "eslint-plugin-html": "^6.2.0",
+        "eslint-plugin-json": "^3.1.0",
+        "eslint-plugin-prettier": "^3.1.1",
+        "eslint-plugin-vue": "^5.0.0",
+        "lint-staged": "^9.4.2",
+        "prettier": "^1.18.2",
+        "sass": "^1.63.6",
+        "sass-loader": "^10.4.1",
+        "vue-template-compiler": "^2.6.10",
+        "webpack": "^4.46.0"
+    },
+    "gitHooks": {
+        "pre-push": "lint-staged"
+    },
+    "lint-staged": {
+        "*.{js,vue}": [
+            "vue-cli-service lint",
+            "git add"
+        ]
+    },
+    "eslintConfig": {
+        "rules": {
+            "no-console": "off"
+        }
     }
-  }
 }

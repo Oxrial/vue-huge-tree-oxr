@@ -1,7 +1,7 @@
-import { Tooltip, Input } from 'element-ui';
-
+import { Tooltip, Input } from 'element-ui'
+const requireComponents = { Tooltip, Input }
 export default {
-  install(V) {
-    V.use(Tooltip).use(Input);
-  }
-};
+    install(Vue) {
+        Object.values(requireComponents).forEach(com => Vue.component(com.name, com))
+    }
+}

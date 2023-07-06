@@ -1,3 +1,3 @@
-import HugeTree from './HugeTree.vue';
+import HugeTree from './HugeTree.vue'
 
-export default HugeTree;
+export default HugeTree
