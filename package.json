@@ -1,6 +1,6 @@
 {
     "name": "vue-huge-tree-oxr",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "A based from shenxianhui/vue-huge-tree@1.0.4，去除 node-sass，使用 sass，使用 element-ui 搜索框，过滤前收起展开项，添加至多选中限制默认 1000，使用 id, pId 作为唯一寻址提高渲染速度，样式动画调整",
     "private": false,
     "author": "Oxrial",
