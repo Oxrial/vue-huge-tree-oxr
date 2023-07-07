@@ -46,18 +46,13 @@
                     >
                         <div
                             v-if="!item.isLeaf"
-                            :class="[
-                                item.isLeaf ? 'leaf-node' : 'expand-node',
-                                { 'is-expand': item.isExpand }
-                            ]"
-                            @click="onExpand(item, index)"
+                            :class="['expand-node', { 'is-expand': item.isExpand }]"
+                            @click.stop="onExpand(item, index)"
                         >
                             <slot name="expand-icon" :item="item" :index="index" />
                         </div>
-                        <div v-else>
-                            <slot name="item-icon" :item="item" :index="index">
-                                <div class="item-node" />
-                            </slot>
+                        <div class="leaf-node" v-else>
+                            <slot name="leaf-icon" :item="item" :index="index" />
                         </div>
                         <Checkbox
                             v-model="item.checked"
@@ -73,7 +68,7 @@
                             @on-click-label="onClickLabel(item)"
                         >
                             <div class="label">
-                                <slot :slot-scope="item">{{ item.label }}</slot>
+                                <slot :item="item">{{ item.label }}</slot>
                                 <i v-if="!item.isLeaf && showNodeCount" class="count">
                                     ({{ item.leafCount }})
                                 </i>
@@ -622,7 +617,7 @@ export default {
                     display: none;
                 }
                 .expand-node,
-                .item-node {
+                .leaf-node {
                     width: 24px;
                     height: 26px;
                     line-height: 26px;

@@ -105,28 +105,26 @@ export default {
 
 ## Attributes
 
-| 参数                    | 说明                                                      | 类型    | 可选值                                                       | 默认值                                     |
-| ----------------------- | --------------------------------------------------------- | ------- | ------------------------------------------------------------ | ------------------------------------------ |
-| (new+)checkOver         | 至多选中限制                                              | number  |                                                              | 1000                                       |
-| (new+)expandOnClickNode | 整行点击展开                                              | boolean | true                                                         | false                                      |
-| empty-text              | 内容为空的时候展示的文本                                  | string  | —                                                            | '暂无数据'                                 |
-| (delete-)~~node-key~~   | 每个树节点用来作为唯一标识的属性, 整棵树应该是**唯一**的  | string  | —                                                            | 'id'                                       |
-| highlight-current       | 是否高亮当前选中节点                                      | boolean | true                                                         | false                                      |
+| 参数                    | 说明                                                      | 类型    | 可选值                                                                      | 默认值                                     |
+| ----------------------- | --------------------------------------------------------- | ------- | --------------------------------------------------------------------------- | ------------------------------------------ |
+| (new+)checkOver         | 至多选中限制                                              | number  |                                                                             | 1000                                       |
+| (new+)expandOnClickNode | 整行点击展开                                              | boolean | true                                                                        | false                                      |
+| empty-text              | 内容为空的时候展示的文本                                  | string  | —                                                                           | '暂无数据'                                 |
+| (delete-)~~node-key~~   | 每个树节点用来作为唯一标识的属性, 整棵树应该是**唯一**的  | string  | —                                                                           | 'id'                                       |
+| highlight-current       | 是否高亮当前选中节点                                      | boolean | true                                                                        | false                                      |
 | expand-level            | 节点展开的层级                                            | number  | -1: 展开所有节点;<br />1: 展开第一层 (最外层);<br />2: 展开第二层;<br />... | -1                                         |
-| indent                  | 相邻级节点间的水平缩进，单位为像素                        | number  | —                                                            | 16                                         |
-| show-node-count         | 显示节点对应的数据量                                      | boolean | true                                                         | false                                      |
-| show-search-bar         | 显示搜索框, 多个关键字之间用英文逗号分隔                  |         |                                                              |                                            |
-| placeholder             | 搜索框的占位文本                                          | string  | —                                                            | 请输入关键字, 多个关键字之间用英文逗号分隔 |
-| default-expanded-keys   | 默认展开的节点的 key 的数组                               | array   | —                                                            | —                                          |
-| loading                 | 是否显示数据加载时的状态                                  | boolean | true                                                         | false                                      |
-| loading-text            | 数据加载状态时提示的文字                                  | string  | —                                                            | 'loading...'                               |
-| checked-action          | 点击 label 选中模式                                       | string  | 'none': 不选中;<br />'click': 单击选中;<br />'dblclick': 双击选中 | 'none'                                     |
-| show-checkbox           | 节点是否可被选择                                          | boolean | true                                                         | false                                      |
-| show-checkbox-leaf-only | 是否仅叶子节点展示 checkbox, show-checkbox 为 true 时有效 | boolean | true                                                         | false                                      |
-| default-checked-keys    | 默认勾选的节点的 key 的数组 (**需要 setData 之后赋值**)   |         |                                                              |                                            |
-| check-strictly          | 在显示复选框的情况下，是否严格的遵循父子不互相关联的做法  | boolean | true                                                         | false                                      |
-
-
+| indent                  | 相邻级节点间的水平缩进，单位为像素                        | number  | —                                                                           | 16                                         |
+| show-node-count         | 显示节点对应的数据量                                      | boolean | true                                                                        | false                                      |
+| show-search-bar         | 显示搜索框, 多个关键字之间用英文逗号分隔                  |         |                                                                             |                                            |
+| placeholder             | 搜索框的占位文本                                          | string  | —                                                                           | 请输入关键字, 多个关键字之间用英文逗号分隔 |
+| default-expanded-keys   | 默认展开的节点的 key 的数组                               | array   | —                                                                           | —                                          |
+| loading                 | 是否显示数据加载时的状态                                  | boolean | true                                                                        | false                                      |
+| loading-text            | 数据加载状态时提示的文字                                  | string  | —                                                                           | 'loading...'                               |
+| checked-action          | 点击 label 选中模式                                       | string  | 'none': 不选中;<br />'click': 单击选中;<br />'dblclick': 双击选中           | 'none'                                     |
+| show-checkbox           | 节点是否可被选择                                          | boolean | true                                                                        | false                                      |
+| show-checkbox-leaf-only | 是否仅叶子节点展示 checkbox, show-checkbox 为 true 时有效 | boolean | true                                                                        | false                                      |
+| default-checked-keys    | 默认勾选的节点的 key 的数组 (**需要 setData 之后赋值**)   |         |                                                                             |                                            |
+| check-strictly          | 在显示复选框的情况下，是否严格的遵循父子不互相关联的做法  | boolean | true                                                                        | false                                      |
 
 ## Methods
 
@@ -154,13 +152,13 @@ export default {
 
 ## Scoped Slot
 
-| name                | 说明                                                         |
-| ------------------- | ------------------------------------------------------------ |
-| (new+)*expand-icon* | 非子节点前置，例：`<template #expand-icon="{item,index}"></template>` |
-| (new+)*item-icon*   | 子节点前置，例：`<template #item-icon="{item,index}"></template>` |
-| —                   | 自定义树节点的内容, 例: `<template v-slot="node">{{ node }}</template>` |
+| name                | 说明                                                                         |
+| ------------------- | ---------------------------------------------------------------------------- |
+| (new+)_expand-icon_ | 非子节点前置，例：`<template #expand-icon="{item,index}"></template>`        |
+| (new+)_leaf-icon_   | 子节点前置，例：`<template #leaf-icon="{item,index}"></template>`            |
+| —                   | 自定义树节点的内容, 例: `<template v-slot="node">{{ node }}</template>`      |
 | search-bar          | 自定义搜索框, 例: `<template #pre-input="{func}"></template>` func：过滤方法 |
-| loading             | 自定义加载中 slot, 例: `<template v-slot:loading>加载中...</template>` |
+| loading             | 自定义加载中 slot, 例: `<template v-slot:loading>加载中...</template>`       |
 
 ### <a id="data-format">数据结构</a>
 

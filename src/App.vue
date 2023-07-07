@@ -18,8 +18,9 @@
 </template>
 
 <script>
-import HugeTree from './huge-tree'
-
+import HugeTree from '../dist/vue-huge-tree-oxr.common'
+import '../dist/vue-huge-tree-oxr.css'
+// import HugeTree from './huge-tree'
 export default {
     components: {
         HugeTree
