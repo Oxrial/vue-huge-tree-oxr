@@ -1,12 +1,24 @@
 # 忽略目录
 node_modules
+src
+.vscode
+public
  
 # 忽略指定文件
+.editorconfig
+.eslintignore
 .eslintrc
+.eslintrc.js
+.prettierrc
+.prettierignore
+.prettierrc.js
 .gitignore
 .prettierrc.js
 vue.config.js
 babel.config.js
 *.map
+postcss.config.js
+package.json
 package-lock.json
+pnpm-lock.yaml
 yarn.lock

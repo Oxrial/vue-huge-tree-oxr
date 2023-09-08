@@ -13,7 +13,7 @@
                 <el-input
                     v-model="keyword"
                     clearable
-                    placeholder="输入关键字过滤 [,] 分隔匹配"
+                    :placeholder="placeholder"
                     @keyup.13="init"
                     @input="debounceInput"
                 />
@@ -66,6 +66,7 @@
                             :node="item"
                             @on-checked="onChecked(item)"
                             @on-click-label="onClickLabel(item)"
+                            @on-node-click="e => $emit('node-click', item, e)"
                         >
                             <div class="label">
                                 <slot :item="item">{{ item.label }}</slot>
@@ -135,12 +136,17 @@ export default {
         showNodeCount: { type: Boolean, default: false },
         // 显示搜索框
         showSearchBar: { type: Boolean, default: false },
+        searchMethod: {
+            type: Function,
+            default: (keywords, node) =>
+                keywords.some(keyword => node.label.includes(keyword.toLowerCase()))
+        },
         // 缩进
         indent: { type: Number, default: 16 },
         // 默认展开的节点的 key 的数组
         defaultExpandedKeys: { type: Array, default: () => [] },
         // 输入框 placeholder
-        placeholder: { type: String, default: '请输入关键字, 多个关键字之间用英文逗号分隔' },
+        placeholder: { type: String, default: '输入关键字过滤 [,] 分隔匹配' },
         // 加载中
         loading: { type: Boolean, default: false },
         // 加载状态提示文字
@@ -214,18 +220,18 @@ export default {
         setData(data) {
             this.clear()
             this.big._data = data
-            this.init('init')
+            this.init('__INIT__')
         },
 
         init(op) {
-            // op: init, restore, showCheckedOnly
+            // op: __INIT__, __RESTORE__, __SHOW_CHECKED_ONLY__
             if (this.big._data.length === 0) return
-            if (op === 'init') {
+            if (op === '__INIT__') {
                 this.flatTree(this.big._data)
                 this.big.list.forEach(node => (this.big.listMap[node.id] = node))
             }
             this.initFilter(op)
-            if (op === 'init' || op === 'restore') this.initExpand()
+            if (op === '__INIT__' || op === '__RESTORE__') this.initExpand()
             this.setCheckedKeys(this.big.checkedKeys)
             this.backToTop()
         },
@@ -297,6 +303,7 @@ export default {
                 return
             }
             this.clearChecked()
+            console.log('<<<', keys, this.big.listMap)
             const nodes = keys.map(key => this.big.listMap[key])
             nodes.forEach((node, index) => {
                 if (node && node.isLeaf) {
@@ -452,10 +459,9 @@ export default {
             })
             this.big.disabledList = this.big.filterList.filter(i => i.disabled)
         },
-
         // set this.big.filterList
         setFilterList(op) {
-            if (op === 'showCheckedOnly') {
+            if (op === '__SHOW_CHECKED_ONLY__') {
                 // 不直接 this.big.filterList = this.big.checkedNodes, 因为之前的 filter 将 滤掉的 非叶子节点indeterminate = true 丢失了。场景，1. 输入关键字，2. 点击showCheckedOnly
                 this.big.filterList = this.big.list.filter(i => {
                     const is = isCheckedOrIndeterminate(i, this.big.list)
@@ -473,7 +479,7 @@ export default {
                     return
                 }
                 this.big.filterList = this.big.allCheckedList.filter(i => {
-                    return isIncludesKeyword(i, this.keyword, this.big.allCheckedList)
+                    return isIncludesKeyword.call(this, i, this.keyword, this.big.allCheckedList)
                 })
                 return
             }
@@ -482,7 +488,7 @@ export default {
                 return
             }
             this.big.filterList = this.big.list.filter(i => {
-                return isIncludesKeyword(i, this.keyword, this.big.list)
+                return isIncludesKeyword.call(this, i, this.keyword, this.big.list)
             })
         },
 
@@ -512,7 +518,7 @@ export default {
         // 仅展示选中的项
         showCheckedOnly(isOnlyInCheckedSearch = true) {
             this.keyword = ''
-            this.init('showCheckedOnly')
+            this.init('__SHOW_CHECKED_ONLY__')
             // 开关，仅在选中节点里筛选
             this.isOnlyInCheckedSearch = isOnlyInCheckedSearch
             if (isOnlyInCheckedSearch) {
@@ -525,7 +531,7 @@ export default {
         restore() {
             this.isOnlyInCheckedSearch = false
             this.big.allCheckedList = []
-            this.init('restore')
+            this.init('__RESTORE__')
         },
         // 手动更新选中状态
         update() {

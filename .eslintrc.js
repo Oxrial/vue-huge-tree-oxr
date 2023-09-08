@@ -17,7 +17,8 @@ module.exports = {
                 tabWidth: 4
             }
         ],
-        'no-unused-vars': 'off'
+        'no-unused-vars': 'off',
+        'no-unreachable': 'warn'
     },
     parserOptions: {
         parser: 'babel-eslint'

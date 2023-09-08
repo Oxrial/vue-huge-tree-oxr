@@ -9,14 +9,15 @@ export function isIncludesKeyword(node, keyword, list) {
     // const keywords = keyword.split(/[,，]/).filter(v => v);
     const keywords = keyword.split(',').filter(v => v)
     // const isInclude = node.label.includes(keyword);
-    const isInclude = keywords.some(keyword => node.label.includes(keyword.toLowerCase()))
+    const isInclude = this.searchMethod(keywords, node)
+    //  keywords.some(keyword => node.label.includes(keyword.toLowerCase()))
     if (isInclude) {
         // 自己匹配上了
         return true
     }
     if (!node.isLeaf) {
         const allDirectChildren = list.filter(i => i.pId === node.id)
-        return allDirectChildren.some(i => isIncludesKeyword(i, keyword, list))
+        return allDirectChildren.some(i => isIncludesKeyword.call(this, i, keyword, list))
     }
     return false
 }

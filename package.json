@@ -1,6 +1,6 @@
 {
     "name": "vue-huge-tree-oxr",
-    "version": "1.0.2",
+    "version": "1.0.5",
     "description": "A based from shenxianhui/vue-huge-tree@1.0.4，去除 node-sass，使用 sass，使用 element-ui 搜索框，过滤前收起展开项，添加至多选中限制默认 1000，使用 id, pId 作为唯一寻址提高渲染速度，样式动画调整",
     "private": false,
     "author": "Oxrial",
@@ -12,13 +12,14 @@
     "main": "dist/vue-huge-tree-oxr.umd.min.js",
     "scripts": {
         "serve": "vue-cli-service serve",
-        "build": "vue-cli-service build --target lib --name vue-huge-tree-oxr src/index.js",
+        "build": "vue-cli-service build --target lib --no-build-demo --name vue-huge-tree-oxr src/index.js",
         "lint": "vue-cli-service lint"
     },
     "dependencies": {
         "core-js": "^3.3.2",
         "element-ui": "^2.15.13",
-        "vue": "^2.6.10"
+        "vue": "^2.6.10",
+        "vue-huge-tree-oxr": "1.0.3"
     },
     "devDependencies": {
         "@babel/preset-env": "^7.22.6",

@@ -10,6 +10,9 @@ dependencies:
   vue:
     specifier: ^2.6.10
     version: 2.7.14
+  vue-huge-tree-oxr:
+    specifier: 1.0.3
+    version: 1.0.3
 
 devDependencies:
   '@babel/preset-env':
@@ -10863,6 +10866,14 @@ packages:
   /vue-hot-reload-api@2.3.4:
     resolution: {integrity: sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==}
     dev: true
+
+  /vue-huge-tree-oxr@1.0.3:
+    resolution: {integrity: sha512-0ephbIl0/7m55XIbNXT+HzlMQ89vptpciHzIMROcNdvd8Gg0iSdtqiOEXTpmpwZ79PwQ5NSOcZ8UH2QdLivr1w==}
+    dependencies:
+      core-js: 3.31.0
+      element-ui: 2.15.13(vue@2.7.14)
+      vue: 2.7.14
+    dev: false
 
   /vue-loader@15.10.1(cache-loader@4.1.0)(css-loader@3.6.0)(vue-template-compiler@2.7.14)(webpack@4.46.0):
     resolution: {integrity: sha512-SaPHK1A01VrNthlix6h1hq4uJu7S/z0kdLUb6klubo738NeQoLbS6V9/d8Pv19tU0XdQKju3D1HSKuI8wJ5wMA==}

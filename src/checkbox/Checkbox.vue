@@ -1,13 +1,13 @@
 <template>
-    <div :class="['check-box']">
+    <div :class="['check-box']" @click.stop="e => $emit('on-node-click', e)">
         <el-tooltip
+            v-if="showBox"
             effect="dark"
             content="至多一次选择1000条"
             placement="top-start"
             :disabled="node.isLeaf || node.leafCount <= checkOver"
         >
             <div
-                v-if="showBox"
                 :class="[
                     'box',
                     {
@@ -17,7 +17,7 @@
                         'check-over': !node.isLeaf && node.leafCount > checkOver
                     }
                 ]"
-                @click="
+                @click.stop="
                     ;(node.isLeaf || (!node.isLeaf && node.leafCount <= checkOver)) && onChecked()
                 "
             />
@@ -106,6 +106,7 @@ export default {
     flex: 1;
     display: flex;
     align-items: center;
+    line-height: 26px;
     .box {
         position: relative;
         flex-shrink: 0;

@@ -35,7 +35,7 @@ import 'vue-huge-tree-oxr/dist/vue-huge-tree-oxr.css'
                 :expand-level="2"
                 :default-checked-keys="checkedKeys"
                 @check="onClickCheckbox"
-                @click-label="onClickLabel"
+                @clicok-label="onClickLabel"
                 @check-change="onChange"
     />
 </template>
@@ -115,7 +115,7 @@ export default {
 | expand-level            | 节点展开的层级                                            | number  | -1: 展开所有节点;<br />1: 展开第一层 (最外层);<br />2: 展开第二层;<br />... | -1                                         |
 | indent                  | 相邻级节点间的水平缩进，单位为像素                        | number  | —                                                                           | 16                                         |
 | show-node-count         | 显示节点对应的数据量                                      | boolean | true                                                                        | false                                      |
-| show-search-bar         | 显示搜索框, 多个关键字之间用英文逗号分隔                  |         |                                                                             |                                            |
+| show-search-bar         | 显示搜索框, 多个关键字之间用英文逗号分隔                  | boolean | true                                                                        | false                                      |
 | placeholder             | 搜索框的占位文本                                          | string  | —                                                                           | 请输入关键字, 多个关键字之间用英文逗号分隔 |
 | default-expanded-keys   | 默认展开的节点的 key 的数组                               | array   | —                                                                           | —                                          |
 | loading                 | 是否显示数据加载时的状态                                  | boolean | true                                                                        | false                                      |
