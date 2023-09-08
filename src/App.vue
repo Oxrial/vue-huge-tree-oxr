@@ -9,18 +9,20 @@
                 :expand-level="2"
                 :expand-on-click-node="true"
                 :default-checked-keys="checkedKeys"
+                :search-method="searchMethod"
                 @check="onClickCheckbox"
                 @click-label="onClickLabel"
                 @check-change="onChange"
+                @node-click="onNodeClick"
             />
         </div>
     </div>
 </template>
 
 <script>
-import HugeTree from '../dist/vue-huge-tree-oxr.common'
-import '../dist/vue-huge-tree-oxr.css'
-// import HugeTree from './huge-tree'
+// import HugeTree from '../dist/vue-huge-tree-oxr.common'
+// import '../dist/vue-huge-tree-oxr.css'
+import HugeTree from './huge-tree'
 export default {
     components: {
         HugeTree
@@ -73,6 +75,18 @@ export default {
             const leafNode = checkedNodes.filter(n => n.isLeaf)
             console.log('onChange ~ leafNode>>> :', leafNode)
             console.log('------')
+        },
+        onNodeClick(node, e) {
+            if (!node.isLeaf || node.disabled) return
+            node.checked = !node.checked
+            this.$refs['huge-tree'].onChecked(node)
+        },
+        searchMethod(keywords, { value, label }) {
+            return keywords.some(
+                keyword =>
+                    value.toLowerCase().includes(keyword.toLowerCase()) ||
+                    label.toLowerCase().includes(keyword.toLowerCase())
+            )
         }
     }
 }

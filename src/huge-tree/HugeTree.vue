@@ -42,7 +42,7 @@
                             }
                         ]"
                         :style="`margin-left: ${(item.path.length - 1) * Number(indent)}px`"
-                        @click="expandOnClickNode && onExpand(item, index)"
+                        @click.capture="expandOnClickNode && onExpand(item, index)"
                     >
                         <div
                             v-if="!item.isLeaf"
@@ -139,7 +139,7 @@ export default {
         searchMethod: {
             type: Function,
             default: (keywords, node) =>
-                keywords.some(keyword => node.label.includes(keyword.toLowerCase()))
+                keywords.some(keyword => node.label.toLowerCase().includes(keyword.toLowerCase()))
         },
         // 缩进
         indent: { type: Number, default: 16 },
