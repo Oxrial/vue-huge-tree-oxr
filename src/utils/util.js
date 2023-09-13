@@ -263,7 +263,6 @@ export const deepCopy = function(obj, cache = []) {
 // 基本数据类型置 null, 清空内存占用
 export const clearAll = function(obj) {
     if (typeof obj === 'function' || obj === null || typeof obj !== 'object') {
-        // console.log('obj---->', obj);
         obj = null
         return
     }

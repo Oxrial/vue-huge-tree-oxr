@@ -303,7 +303,6 @@ export default {
                 return
             }
             this.clearChecked()
-            console.log('<<<', keys, this.big.listMap)
             const nodes = keys.map(key => this.big.listMap[key])
             nodes.forEach((node, index) => {
                 if (node && node.isLeaf) {
