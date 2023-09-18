@@ -44,7 +44,7 @@ export default {
                         children: Array.from(Array(1000).keys(), cv => ({
                             id: '0-' + v + '-' + cv,
                             pId: '0-' + v,
-                            disabled: cv === 1,
+                            disabled: cv === 1 || cv === 2,
                             label: 'label_' + v + '-' + cv,
                             value: 'value_' + v + '-' + cv
                         }))

@@ -158,9 +158,15 @@ export default {
             background-color: #409eff;
             border-color: #409eff;
             transition: all 0.25s;
+            &.is-disabled {
+                background: #95c9ff;
+                color: #c0c4cc;
+                border-color: #c0c4cc;
+                cursor: not-allowed;
+            }
         }
         &.is-disabled {
-            background: #f2f6fc;
+            background: #edf2fc;
             color: #c0c4cc;
             border-color: #c0c4cc;
             cursor: not-allowed;

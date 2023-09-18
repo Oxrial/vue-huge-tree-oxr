@@ -47,7 +47,7 @@
                         <div
                             v-if="!item.isLeaf"
                             :class="['expand-node', { 'is-expand': item.isExpand }]"
-                            @click.stop="onExpand(item, index)"
+                            @click.stop="!expandOnClickNode && onExpand(item, index)"
                         >
                             <slot name="expand-icon" :item="item" :index="index" />
                         </div>
@@ -345,6 +345,14 @@ export default {
             this.handleCheckedChange(node)
             this.emitChecked()
             this.$emit('check', node)
+        },
+        onUnCheckedById(id) {
+            const node = this.big.list.find(node => node.id === id)
+            if (!node) return
+            node.checked = false
+            this.doParentChecked(node.pId)
+            this.emitChecked()
+            this.$emit('uncheck', node)
         },
 
         // 点击 label
