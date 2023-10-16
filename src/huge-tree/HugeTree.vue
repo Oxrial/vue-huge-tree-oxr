@@ -572,16 +572,16 @@ export default {
 <style lang="scss" scoped>
 /* 滚动条样式 */
 ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 0.3125rem;
+    height: 0.3125rem;
 }
 ::-webkit-scrollbar-track-piece {
     background: #efefef;
 }
 ::-webkit-scrollbar-thumb {
     background: #aaa;
-    min-width: 150px;
-    border-radius: 5px;
+    min-width: 9.375rem;
+    border-radius: 0.3125rem;
 }
 ::-webkit-scrollbar-thumb:vertical:hover {
     background: #666;
@@ -592,13 +592,22 @@ export default {
 .huge-tree {
     display: flex;
     flex-direction: column;
-    min-height: 50px;
+    min-height: 3.125rem;
     height: 100%;
     * {
         transition: all 0.3s ease-in-out;
     }
     .search-bar {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
+        .el-input {
+            font-size: 0.875rem;
+            ::v-deep .el-input__inner {
+                border-radius: 0.25rem;
+                height: 2.5rem;
+                line-height: 2.5rem;
+                padding: 0 0.9375rem;
+            }
+        }
     }
     .content-wrap {
         position: relative;
@@ -631,9 +640,9 @@ export default {
                 }
                 .expand-node,
                 .leaf-node {
-                    width: 24px;
-                    height: 26px;
-                    line-height: 26px;
+                    width: 1.5rem;
+                    height: 1.625rem;
+                    line-height: 1.625rem;
                     cursor: auto;
                 }
                 .expand-node {
@@ -650,14 +659,14 @@ export default {
                     &::before {
                         content: '\25BC';
                         position: absolute;
-                        font-size: 12px;
+                        font-size: 0.75rem;
                         color: #c0c4cc;
                         transform: rotate(-90deg) scale(1, 0.5);
                         transition: transform 0.3s ease-in-out;
                     }
                     &.is-expand::before {
                         content: '\25BC';
-                        font-size: 12px;
+                        font-size: 0.75rem;
                         color: #c0c4cc;
                         transform: rotate(0deg) scale(1, 0.5);
                         transition: transform 0.3s ease-in-out;
@@ -666,9 +675,9 @@ export default {
                 .label {
                     cursor: pointer;
                     color: #606266;
-                    font-size: 14px;
+                    font-size: 0.875rem;
                     .count {
-                        font-size: 12px;
+                        font-size: 0.75rem;
                         color: #c0c4cc;
                     }
                 }
